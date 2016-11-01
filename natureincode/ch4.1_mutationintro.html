@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ch4, Mutation: The Power of Mistakes (pg.76-88)</title>
+  <script src="http://d3js.org/d3.v3.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+  var sequences = []; //store 100 sequences in this array; each sequence itself an array of bases (length 20)
+  var original_sequence = []; //ancestral sequence
+  var number_of_sequences = 100;
+  var sequence_length = 20;
+  var number_of_generations = 100;
+  var mutation_rate = 0.0001; //prob of mutation for each base at each generation
+
+  //constant variable, hence capitals (note has no effect on actual compiler)
+  var BASES = ["A","G","C","T"];
+
+  //code to generate first generation
+
+  //returns a new base different from given base
+  function random_base(current_base) {
+    var new_base;
+    do {
+      var index = Math.floor(Math.random() * 4);
+      new_base = BASES[index];
+    } while (new_base == current_base);
+    return new_base;
+  }
+
+  //function to add random base to original_sequence array
+  function generate_original_sequence() {
+    for(var i=0; i<sequence_length; i=i+1) {
+      original_sequence.push(random_base(""));
+    }
+  }
+
+  //makes copies of original sequence and save (push) in sequences array
+  function generate_first_generation() {
+    generate_original_sequence();
+    for(var i=0; i<number_of_sequences; i=i+1) {
+      sequences.push(original_sequence.slice());
+    }
+  }
+
+  //prints all sequences to console
+  function print_sequences(title) {
+    console.log(title);
+    for(var i=0; i<number_of_sequences; i=i+1) {
+      print_sequence(sequences[i]);
+    }
+    console.log("");
+  }
+
+  function print_sequence(sequence) {
+    var sequence_string = "";
+    for(var i=0; i<sequence_length; i=i+1) {
+      sequence_string = sequence_string + sequence[i];
+    }
+    console.log(sequence_string);
+  }
+
+  generate_first_generation();
+  print_sequences("Generation 0");
+
+  //now add mutation
+  function run_generations() {
+    //iterate over generations
+    for(var i=0; i<number_of_generations; i=i+1){
+      //iterate over sequences (population in each gen)
+      for(var ii=0; ii<sequence_length; ii=ii+1){
+        //iterate over all bases in each sequence
+        for(var iii=0; iii<sequences[ii].length; iii=iii+1){
+          if(Math.random()<mutation_rate){
+            sequences[ii][iii] = random_base(sequences[ii][iii]);
+          }
+        }
+      }
+    }
+  }
+
+  run_generations();
+  print_sequences("After 100 generations");
+
+
+  //PLOTTING CODE
+  ///////////////
+  function draw_line_chart(data,x_label,y_label,legend_values,x_max,y_max_flex) {
+  var margin = {top: 20, right: 20, bottom: 50, left: 50},
+      width = 700 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
+
+  var color = d3.scale.category10();
+
+  if (!x_max) {
+      x_max = data[0].length > 0 ? data[0].length : data.length
+  }
+
+  var y_max = data[0].length > 0 ? d3.max(data, function(array) {
+          return d3.max(array);
+      }) : d3.max(data);
+
+  var x = d3.scale.linear()
+      .domain([0,x_max])
+      .range([0, width]);
+
+  var y = y_max_flex ? d3.scale.linear()
+      .domain([0, 1.1 * y_max])
+      .range([height, 0]) : d3.scale.linear()
+      .range([height, 0]);
+
+  var xAxis = d3.svg.axis()
+      .scale(x).orient("bottom");
+
+  var yAxis = d3.svg.axis()
+      .scale(y).orient("left");
+
+  var line = d3.svg.line()
+      .x(function (d, i) {
+          var dat = (data[0].length > 0 ? data[0] : data);
+          return x((i/(dat.length-1)) * x_max);
+      })
+      .y(function (d) {
+          return y(d);
+      });
+
+  var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("x", width / 2)
+      .attr("y", 6)
+      .attr("dy", "3em")
+      .text(x_label);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -height / 2)
+      .attr("dy", "-3.5em")
+      .style("text-anchor", "middle").
+      text(y_label);
+
+  if (legend_values.length > 0) {
+      var legend = svg.append("text")
+          .attr("text-anchor", "star")
+          .attr("y", 30)
+          .attr("x", width-100)
+          .append("tspan").attr("class", "legend_title")
+          .text(legend_values[0])
+          .append("tspan").attr("class", "legend_text")
+          .attr("x", width-100).attr("dy", 20).text(legend_values[1])
+          .append("tspan").attr("class", "legend_title")
+          .attr("x", width-100).attr("dy", 20).text(legend_values[2])
+          .append("tspan").attr("class", "legend_text")
+          .attr("x", width-100).attr("dy", 20).text(legend_values[3]);
+  }
+  else {
+      svg.selectAll("line.horizontalGridY")
+          .data(y.ticks(10)).enter()
+          .append("line")
+          .attr(
+          {
+          "x1" : 1,
+          "x2" : width,
+          "y1" : function(d){ return y(d);},
+          "y2" : function(d){ return y(d);},
+          "fill" : "none",
+          "shape-rendering" : "crispEdges",
+          "stroke" : "#f5f5f5",
+          "stroke-width" : "1px"
+          });
+
+      svg.selectAll("line.horizontalGridX")
+          .data(x.ticks(10)).enter()
+          .append("line")
+          .attr(
+          {
+          "x1" : function(d,i){ return x(d);},
+          "x2" : function(d,i){ return x(d);},
+          "y1" : 1,
+          "y2" : height,
+          "fill" : "none",
+          "shape-rendering" : "crispEdges",
+          "stroke" : "#f5f5f5",
+          "stroke-width" : "1px"
+          });
+  }
+
+  d3.select("body").style("font","10px sans-serif");
+  d3.selectAll(".axis path, .axis line")
+      .style({"fill":"none","stroke":"#000","shape-rendering":"crispEdges"});
+  d3.selectAll(".x.axis path").style("display","none");
+  d3.selectAll(".legend_title")
+      .style({"font-size":"12px","fill":"#555","font-weight":"400"});
+  d3.selectAll(".legend_text")
+      .style({"font-size":"20px","fill":"#bbb","font-weight":"700"});
+
+  if (data[0].length > 0) {
+      var simulation = svg.selectAll(".simulation")
+          .data(data)
+          .enter().append("g")
+          .attr("class", "simulation");
+
+      simulation.append("path")
+          .attr("class", "line")
+          .attr("d", function(d) { return line(d); })
+          .style("stroke", function(d,i) { return color(i); });
+  }
+  else {
+      svg.append("path")
+          .datum(data)
+          .attr("class", "line")
+          .attr("d", line)
+          .style("stroke","steelblue");
+  }
+  d3.selectAll(".line").style({"fill":"none","stroke-width":"1.5px"});
+
+}
+  //draw_line_chart is a plotting function
+
+  //look at relationship between H and 4Nmu
+  var data=[];
+  var x_max=10;
+
+  for(var i=0; i<=x_max+0.005; i=i+0.01){
+    data.push(i/(1+i));
+  }
+
+  draw_line_chart(data,"4N\u03BC","H",[],x_max);
+  </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ch3, Visualizing Drift (p43-56)</title>
+  <script src="http://d3js.org/d3.v3.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    //PLOTTING CODE
+    ///////////////
+    function draw_line_chart(data,x_label,y_label,legend_values,x_max,y_max_flex) {
+    var margin = {top: 20, right: 20, bottom: 50, left: 50},
+        width = 700 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    var color = d3.scale.category10();
+
+    if (!x_max) {
+        x_max = data[0].length > 0 ? data[0].length : data.length
+    }
+
+    var y_max = data[0].length > 0 ? d3.max(data, function(array) {
+            return d3.max(array);
+        }) : d3.max(data);
+
+    var x = d3.scale.linear()
+        .domain([0,x_max])
+        .range([0, width]);
+
+    var y = y_max_flex ? d3.scale.linear()
+        .domain([0, 1.1 * y_max])
+        .range([height, 0]) : d3.scale.linear()
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x).orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y).orient("left");
+
+    var line = d3.svg.line()
+        .x(function (d, i) {
+            var dat = (data[0].length > 0 ? data[0] : data);
+            return x((i/(dat.length-1)) * x_max);
+        })
+        .y(function (d) {
+            return y(d);
+        });
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", 6)
+        .attr("dy", "3em")
+        .text(x_label);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("dy", "-3.5em")
+        .style("text-anchor", "middle").
+        text(y_label);
+
+    if (legend_values.length > 0) {
+        var legend = svg.append("text")
+            .attr("text-anchor", "star")
+            .attr("y", 30)
+            .attr("x", width-100)
+            .append("tspan").attr("class", "legend_title")
+            .text(legend_values[0])
+            .append("tspan").attr("class", "legend_text")
+            .attr("x", width-100).attr("dy", 20).text(legend_values[1])
+            .append("tspan").attr("class", "legend_title")
+            .attr("x", width-100).attr("dy", 20).text(legend_values[2])
+            .append("tspan").attr("class", "legend_text")
+            .attr("x", width-100).attr("dy", 20).text(legend_values[3]);
+    }
+    else {
+        svg.selectAll("line.horizontalGridY")
+            .data(y.ticks(10)).enter()
+            .append("line")
+            .attr(
+            {
+            "x1" : 1,
+            "x2" : width,
+            "y1" : function(d){ return y(d);},
+            "y2" : function(d){ return y(d);},
+            "fill" : "none",
+            "shape-rendering" : "crispEdges",
+            "stroke" : "#f5f5f5",
+            "stroke-width" : "1px"
+            });
+
+        svg.selectAll("line.horizontalGridX")
+            .data(x.ticks(10)).enter()
+            .append("line")
+            .attr(
+            {
+            "x1" : function(d,i){ return x(d);},
+            "x2" : function(d,i){ return x(d);},
+            "y1" : 1,
+            "y2" : height,
+            "fill" : "none",
+            "shape-rendering" : "crispEdges",
+            "stroke" : "#f5f5f5",
+            "stroke-width" : "1px"
+            });
+    }
+
+    d3.select("body").style("font","10px sans-serif");
+    d3.selectAll(".axis path, .axis line")
+        .style({"fill":"none","stroke":"#000","shape-rendering":"crispEdges"});
+    d3.selectAll(".x.axis path").style("display","none");
+    d3.selectAll(".legend_title")
+        .style({"font-size":"12px","fill":"#555","font-weight":"400"});
+    d3.selectAll(".legend_text")
+        .style({"font-size":"20px","fill":"#bbb","font-weight":"700"});
+
+    if (data[0].length > 0) {
+        var simulation = svg.selectAll(".simulation")
+            .data(data)
+            .enter().append("g")
+            .attr("class", "simulation");
+
+        simulation.append("path")
+            .attr("class", "line")
+            .attr("d", function(d) { return line(d); })
+            .style("stroke", function(d,i) { return color(i); });
+    }
+    else {
+        svg.append("path")
+            .datum(data)
+            .attr("class", "line")
+            .attr("d", line)
+            .style("stroke","steelblue");
+    }
+    d3.selectAll(".line").style({"fill":"none","stroke-width":"1.5px"});
+
+}
+  //draw_line_chart is a plotting function
+
+  //simulation code for allele frequency
+  var p = 0.5;
+  var N = 500;
+  var generations = 1e3;
+  var data = [];
+
+  function next_generation(){
+    var draws = 2*N;
+    var a1 = 0;
+    var a2 = 0;
+    for(var i=0;i<draws;i=i+1){
+      if(Math.random() <= p){
+        a1 = a1+1;
+      }
+      else{
+        a2 = a2+2;
+      }
+    }
+    p = a1/draws;
+    data.push(p)
+  }
+
+  for(var i=0; i<generations; i=i+1){
+    next_generation();
+  }
+
+  draw_line_chart(data,"Generation","p",["Population Size:",N,"Generations:",generations]);
+
+  </script>
+
+  <script type="text/javascript">
+  //simulation code for multiple runs of allele frequency
+  var p;
+  var N = 2000;
+  var generations = 200;
+  var data = [];
+  var simulations = 10;
+
+  //function to advance 1 generation
+  function next_generation(simulation_data){
+    var draws = 2*N;
+    var a1 = 0;
+    var a2 = 0;
+    for(var i=0; i<draws; i=i+1){
+      if(Math.random() <= p){
+        a1 = a1+1;
+      }
+      else{
+        a2 = a2+1;
+      }
+    }
+    p = a1/draws;
+    simulation_data.push(p);
+  }
+
+  //function to complete 1 simulation
+  function simulation(simulation_counter){
+    p = 0.5;
+    for(var i=0; i<generations; i=i+1){
+      next_generation(data[simulation_counter])
+    }
+  }
+
+  //for loop to complete all simulations
+  for(var i=0; i<simulations; i=i+1){
+    data.push([]);
+    simulation(i);
+  }
+
+  //plot output
+  draw_line_chart(data,"Generation","p",["Population Size:",N,"Generations:",generations]);
+  </script>
+</body>
+</html>

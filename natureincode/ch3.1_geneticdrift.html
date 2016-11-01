@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ch3, Genetic Drift (p30-43)</title>
+
+  <script type="text/javascript">
+
+  //generate random number btwn 0 and 1
+  /////////////////////////////////////
+  console.log(Math.random());
+
+  //verify that long run behavior of Math.random tends to 0.5
+  var sum = 0;
+  var repeats = 1e5;
+  for (var i=0; i<repeats; i=i+1) {
+    sum = sum + Math.random()
+  }
+  average = sum / repeats
+  console.log("The average is", average);
+
+
+  //coin toss simulations
+  ///////////////////////
+  var coins = 10;
+  var heads = 0;
+  var tails = 0;
+  for(var i=0; i<coins; i=i+1) {
+    if(Math.random() <= 0.5) {
+      heads = heads + 1;
+    }
+    else {
+      tails = tails + 1;
+    }
+  }
+  console.log(heads,"heads",tails,"tails")
+
+  //coin toss simulation function
+  function throw_coins() {
+    var coins = 10;
+    var heads = 0;
+    var tails = 0;
+    for(var i=0; i<coins; i=i+1) {
+      if(Math.random() <= 0.5){
+        heads = heads + 1;
+      }
+      else {
+        tails = tails + 1;
+      }
+    }
+    if(heads == 8){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  //simulate number of times to get 8H/2T
+  var repeats = 1e5;
+  var counter = 0;
+  for(var i=0; i<repeats; i=i+1) {
+    var desired_outcome = throw_coins()
+    if(desired_outcome){
+      counter = counter + 1;
+    }
+  }
+  console.log("Getting 8 heads, 2 tails "+ (counter / repeats) * 100 + "% of the time")
+
+
+  //simulation of allele frequencies in N=1e3
+  ///////////////////////////////////////////
+  var p = 0.5;
+  var N = 1e3;
+  var generations = 1e4;
+  //function to sample alleles for single generation
+  function next_generation(){
+    var draws = 2 * N;
+    var a1 = 0;
+    var a2 = 0;
+    for(var i=0; i<draws; i=i+1){
+      if(Math.random() <= p){
+        a1 = a1 + 1;
+      }
+      else{
+        a2 = a2 + 1;
+      }
+    }
+    //this changes p in the global environment
+    p = a1 / draws;
+  }
+
+  //redefine round_number from ch2
+  function round_number(value, decimals) {
+    var shifter = Math.pow(10,decimals);
+    return Math.round(value * shifter) / shifter;
+  }
+
+  //run simulation for i = generations time
+  for(var i=0; i<generations; i=i+1){
+    next_generation();
+    console.log("generation "+i+":\tp =" + round_number(p,3) + "\tq =" + round_number(1-p,3));
+  }
+  </script>
+
+</head>
+
+</html>
