@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      1131,         46]
-NotebookOptionsPosition[       813,         29]
-NotebookOutlinePosition[      1165,         45]
-CellTagsIndexPosition[      1122,         42]
+NotebookDataLength[     30482,        867]
+NotebookOptionsPosition[     29831,        838]
+NotebookOutlinePosition[     30185,        854]
+CellTagsIndexPosition[     30142,        851]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -23,12 +23,821 @@ Cell[CellGroupData[{
 Cell["Evolutionary Dynamics Ch3:", "Title",
  CellChangeTimes->{{3.6870358907670097`*^9, 3.687035894955785*^9}}],
 
+Cell[CellGroupData[{
+
 Cell["3.1 Sequence Space", "Section",
- CellChangeTimes->{{3.687036059463778*^9, 3.687036065294591*^9}}]
+ CellChangeTimes->{{3.687036059463778*^9, 3.687036065294591*^9}}],
+
+Cell[TextData[{
+ "Sequence space is a geometric object of length ",
+ StyleBox["L",
+  FontSlant->"Italic"],
+ "-mers, where ",
+ StyleBox["L",
+  FontSlant->"Italic"],
+ " is the length of the genome, and the object exists in dimension ",
+ StyleBox["L",
+  FontSlant->"Italic"],
+ " (eg; it is a lattice in ",
+ StyleBox["L",
+  FontSlant->"Italic"],
+ "-dimensional space). The size of the alphabet determines the number of \
+points that the geometric object takes; for example protein space will have \
+alphabet size of 20 (amino acids) and if ",
+ StyleBox["k",
+  FontSlant->"Italic"],
+ "=50 (all proteins of length 50) then sequence space is of dimension 50 and \
+number of points ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["20", "50"], "=", "1.125899906842624`5.*^65"}], 
+   TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". So natural evolution will only explore a tiny fraction of possible \
+protein space."
+}], "Text",
+ CellChangeTimes->{{3.687036249885882*^9, 3.687036426709148*^9}, {
+  3.687036511766527*^9, 3.687036573217292*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"N", "[", 
+  RowBox[{
+   SuperscriptBox["20", "50"], ",", "5"}], "]"}]], "Input",
+ CellChangeTimes->{{3.687036413323555*^9, 3.687036415326929*^9}, {
+  3.6870364791945133`*^9, 3.6870365019413433`*^9}}],
+
+Cell[BoxData["1.125899906842624`5.*^65"], "Output",
+ CellChangeTimes->{{3.6870364844861*^9, 3.687036502355351*^9}}]
+}, Open  ]],
+
+Cell["\<\
+what does alphabet size=5 space for L=3 look like? Evolution can only move \
+from node to node along edges, as one member of the L-mer changes at a time. \
+Below this we plot the sequence space for binary genomes of L=3.\
+\>", "Text",
+ CellChangeTimes->{{3.687037087671645*^9, 3.6870371026588583`*^9}, {
+  3.687037331371882*^9, 3.6870373370169067`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Grid", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"GraphPlot3D", "[", 
+     RowBox[{
+      RowBox[{"Table", "[", 
+       RowBox[{"1", ",", 
+        RowBox[{"{", "8", "}"}], ",", 
+        RowBox[{"{", "3", "}"}]}], "]"}], ",", 
+      RowBox[{"Method", "->", 
+       RowBox[{"{", 
+        RowBox[{"\"\<SpringElectricalEmbedding\>\"", ",", " ", 
+         RowBox[{"\"\<RepulsiveForcePower\>\"", " ", "->", " ", 
+          RowBox[{"-", "1.8"}]}]}], "}"}]}]}], "]"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"GraphPlot3D", "[", 
+     RowBox[{
+      RowBox[{"Table", "[", 
+       RowBox[{"1", ",", 
+        RowBox[{"{", 
+         SuperscriptBox["5", "3"], "}"}], ",", 
+        RowBox[{"{", "5", "}"}]}], "]"}], ",", 
+      RowBox[{"Method", "->", "\"\<SpiralEmbedding\>\""}]}], "]"}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.687037469386448*^9, 3.687037470403706*^9}, {
+  3.68703750098096*^9, 3.687037542599658*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Grid", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    Graphics3DBox[
+     TagBox[
+      GraphicsComplex3DBox[{{0.8543975217380436, 0.1781124698102996, 
+       0.6813866683559636}, {0.7724946712363149, 0.7390859408801596, 
+       1.0309715864991986`}, {0.7697753810336928, 0.7235932271321477, 
+       0.30200698803064047`}, {0., 0., 0.6671032477031821}, {
+       1.4084257303130348`, 0.17858585625621815`, 0.}, {0.008784301556572172, 
+       1.1069016323510126`, 0.672924649098968}, {1.4424645400461227`, 
+       1.272620954804387, 0.6524255630247345}, {1.4004627283114726`, 
+       0.20554745498846766`, 1.3653121192419662`}}, {
+        {RGBColor[0.5, 0., 0.], 
+         Line3DBox[{{1, 2}, {1, 3}, {2, 1}, {2, 3}, {3, 1}, {3, 2}, {4, 1}, {
+          4, 2}, {4, 3}, {5, 1}, {5, 2}, {5, 3}, {6, 1}, {6, 2}, {6, 3}, {7, 
+          1}, {7, 2}, {7, 3}, {8, 1}, {8, 2}, {8, 3}}]}, 
+        {RGBColor[0, 0, 0.7], 
+         TagBox[
+          TooltipBox[Point3DBox[1],
+           "1"],
+          Annotation[#, 1, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[2],
+           "2"],
+          Annotation[#, 2, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[3],
+           "3"],
+          Annotation[#, 3, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[4],
+           "4"],
+          Annotation[#, 4, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[5],
+           "5"],
+          Annotation[#, 5, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[6],
+           "6"],
+          Annotation[#, 6, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[7],
+           "7"],
+          Annotation[#, 7, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[8],
+           "8"],
+          Annotation[#, 8, "Tooltip"]& ]}}],
+      Annotation[#, 
+       VertexCoordinateRules -> {{0.8543975217380436, 0.1781124698102996, 
+        0.6813866683559636}, {0.7724946712363149, 0.7390859408801596, 
+        1.0309715864991986`}, {0.7697753810336928, 0.7235932271321477, 
+        0.30200698803064047`}, {0., 0., 0.6671032477031821}, {
+        1.4084257303130348`, 0.17858585625621815`, 0.}, {0.008784301556572172,
+         1.1069016323510126`, 0.672924649098968}, {1.4424645400461227`, 
+        1.272620954804387, 0.6524255630247345}, {1.4004627283114726`, 
+        0.20554745498846766`, 1.3653121192419662`}}]& ],
+     AspectRatio->Automatic,
+     ImageSize->{176., Automatic},
+     PlotRange->All,
+     PlotRangePadding->Scaled[0.1],
+     ViewPoint->{1.3, -2.4, 2.},
+     ViewVertical->{0., 0., 1.0565089987240368`}], "}"}], ",", 
+   RowBox[{"{", 
+    Graphics3DBox[
+     TagBox[GraphicsComplex3DBox[CompressedData["
+1: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
+       "], {
+        {RGBColor[0.5, 0., 0.], Line3DBox[CompressedData["
+1:eJwVidVSIwAQBJmZXdzdIbi7u7sGdwgOgeDOvx/30l1dHQhFgiFGRUWF//Df
+IASDExSNLogyucFoMve/5X8ZjWhGK9qiPQYxjFGMxXgsYhmrWIv1OMQxTnEW
+5/GIZ7ziLd4TkMAEJViCJyKRiUq0RE9CEpOUZEmejGQmK9mSPQUpTFGKpXgq
+UpmqVEv1NKQxTWmW5ulIZ7rSLd0zkMEMZViGZyKTmcq0TM9CFrOUZVmejWxm
+K9uyPQc5zFGO5XgucpmrXMv1POQxT3mW5/nIZ77yLd8LUMACFViBF6KQhSq0
+Qi9CEYtUZEVejGIWq9iKvQQlLFGJlXgpSlmqUiv1AAIMKGABL0MZy1RmZV6O
+cpar3Mq9AhWsUIVVeCUqWalKq/QqVLFKVVbl1ahmtaqt2mtQwxrVWI3Xopa1
+qrVar0Md61RndV6Petar3uq9AQ1sUIM1eCMa2ahGa/QmNLFJTdbkzWhms5qt
+2VvQwha1WIu3opWtarVWb0Mb29Rmbd6Odrar3dq9Ax3sUId1eCc62alO6/Qu
+dLFLXdbl3ehmt7qt23vQwx71WI/3ope96rVe70Mf+9Rnfd6Pfvar3/p9AAMc
+0IAN+CAGOahBG/QhDHFIQzbkwxjmsIZt2EcwwhGN2IiPYpSjGrVRH8MYxzRm
+Yz6OcY5r3MZ9AhOc0IRN+CQmOalJm/QpTHFKUzbl05jmtKZt2mcwwxnN2IzP
+YpazmrVZn8Mc5zRncz6Pec5r3uZ9AQtc0IIt+CIWuahFW/QlLHFJS7bky1jm
+spZt2VewwhWt2IqvYpWrWrVVDyLIoIIW9DWscU1rtubrWOe61m3dN7DBDW3Y
+hm9ik5vatE3fwha3tGVbvo1tbmvbtn0HO9zRju34Lna5q13b9T3scU97tuf7
+2Oe+9m3fD3DAAx3YgR/ikIc6tEM/whGPdGRHfoxjHuvYjv0EJzzRiZ14CCGG
+FLKQn+KUpzq1Uz/DGc90Zmd+jnOe69zO/QIXvNCFXfglLnmpS7v0K1zxSld2
+5de45rWu7dpvcMMb3diN3+KWt7q1Ww8jzLDCFvY73PFOd3bn97jnve7t3iOI
+MKKIRfwBD3zQgz34Ix75qEd79Cc88UlP9uTPeOaznu3ZX/DCF73Yi7/ila96
+tVd/wxvf9GZv/o53vuvd3v0DH/zQh334Jz75qU/79C988Utf9uXf+Oa3vu3b
+f/DDH/3Yj//il7/6tV//B42Aox0=
+          "]]}, 
+        {RGBColor[0, 0, 0.7], 
+         TagBox[
+          TooltipBox[Point3DBox[1],
+           "1"],
+          Annotation[#, 1, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[2],
+           "2"],
+          Annotation[#, 2, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[3],
+           "3"],
+          Annotation[#, 3, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[4],
+           "4"],
+          Annotation[#, 4, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[5],
+           "5"],
+          Annotation[#, 5, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[6],
+           "6"],
+          Annotation[#, 6, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[7],
+           "7"],
+          Annotation[#, 7, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[8],
+           "8"],
+          Annotation[#, 8, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[9],
+           "9"],
+          Annotation[#, 9, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[10],
+           "10"],
+          Annotation[#, 10, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[11],
+           "11"],
+          Annotation[#, 11, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[12],
+           "12"],
+          Annotation[#, 12, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[13],
+           "13"],
+          Annotation[#, 13, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[14],
+           "14"],
+          Annotation[#, 14, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[15],
+           "15"],
+          Annotation[#, 15, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[16],
+           "16"],
+          Annotation[#, 16, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[17],
+           "17"],
+          Annotation[#, 17, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[18],
+           "18"],
+          Annotation[#, 18, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[19],
+           "19"],
+          Annotation[#, 19, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[20],
+           "20"],
+          Annotation[#, 20, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[21],
+           "21"],
+          Annotation[#, 21, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[22],
+           "22"],
+          Annotation[#, 22, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[23],
+           "23"],
+          Annotation[#, 23, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[24],
+           "24"],
+          Annotation[#, 24, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[25],
+           "25"],
+          Annotation[#, 25, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[26],
+           "26"],
+          Annotation[#, 26, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[27],
+           "27"],
+          Annotation[#, 27, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[28],
+           "28"],
+          Annotation[#, 28, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[29],
+           "29"],
+          Annotation[#, 29, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[30],
+           "30"],
+          Annotation[#, 30, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[31],
+           "31"],
+          Annotation[#, 31, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[32],
+           "32"],
+          Annotation[#, 32, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[33],
+           "33"],
+          Annotation[#, 33, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[34],
+           "34"],
+          Annotation[#, 34, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[35],
+           "35"],
+          Annotation[#, 35, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[36],
+           "36"],
+          Annotation[#, 36, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[37],
+           "37"],
+          Annotation[#, 37, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[38],
+           "38"],
+          Annotation[#, 38, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[39],
+           "39"],
+          Annotation[#, 39, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[40],
+           "40"],
+          Annotation[#, 40, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[41],
+           "41"],
+          Annotation[#, 41, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[42],
+           "42"],
+          Annotation[#, 42, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[43],
+           "43"],
+          Annotation[#, 43, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[44],
+           "44"],
+          Annotation[#, 44, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[45],
+           "45"],
+          Annotation[#, 45, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[46],
+           "46"],
+          Annotation[#, 46, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[47],
+           "47"],
+          Annotation[#, 47, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[48],
+           "48"],
+          Annotation[#, 48, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[49],
+           "49"],
+          Annotation[#, 49, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[50],
+           "50"],
+          Annotation[#, 50, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[51],
+           "51"],
+          Annotation[#, 51, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[52],
+           "52"],
+          Annotation[#, 52, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[53],
+           "53"],
+          Annotation[#, 53, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[54],
+           "54"],
+          Annotation[#, 54, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[55],
+           "55"],
+          Annotation[#, 55, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[56],
+           "56"],
+          Annotation[#, 56, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[57],
+           "57"],
+          Annotation[#, 57, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[58],
+           "58"],
+          Annotation[#, 58, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[59],
+           "59"],
+          Annotation[#, 59, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[60],
+           "60"],
+          Annotation[#, 60, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[61],
+           "61"],
+          Annotation[#, 61, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[62],
+           "62"],
+          Annotation[#, 62, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[63],
+           "63"],
+          Annotation[#, 63, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[64],
+           "64"],
+          Annotation[#, 64, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[65],
+           "65"],
+          Annotation[#, 65, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[66],
+           "66"],
+          Annotation[#, 66, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[67],
+           "67"],
+          Annotation[#, 67, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[68],
+           "68"],
+          Annotation[#, 68, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[69],
+           "69"],
+          Annotation[#, 69, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[70],
+           "70"],
+          Annotation[#, 70, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[71],
+           "71"],
+          Annotation[#, 71, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[72],
+           "72"],
+          Annotation[#, 72, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[73],
+           "73"],
+          Annotation[#, 73, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[74],
+           "74"],
+          Annotation[#, 74, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[75],
+           "75"],
+          Annotation[#, 75, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[76],
+           "76"],
+          Annotation[#, 76, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[77],
+           "77"],
+          Annotation[#, 77, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[78],
+           "78"],
+          Annotation[#, 78, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[79],
+           "79"],
+          Annotation[#, 79, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[80],
+           "80"],
+          Annotation[#, 80, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[81],
+           "81"],
+          Annotation[#, 81, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[82],
+           "82"],
+          Annotation[#, 82, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[83],
+           "83"],
+          Annotation[#, 83, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[84],
+           "84"],
+          Annotation[#, 84, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[85],
+           "85"],
+          Annotation[#, 85, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[86],
+           "86"],
+          Annotation[#, 86, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[87],
+           "87"],
+          Annotation[#, 87, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[88],
+           "88"],
+          Annotation[#, 88, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[89],
+           "89"],
+          Annotation[#, 89, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[90],
+           "90"],
+          Annotation[#, 90, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[91],
+           "91"],
+          Annotation[#, 91, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[92],
+           "92"],
+          Annotation[#, 92, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[93],
+           "93"],
+          Annotation[#, 93, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[94],
+           "94"],
+          Annotation[#, 94, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[95],
+           "95"],
+          Annotation[#, 95, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[96],
+           "96"],
+          Annotation[#, 96, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[97],
+           "97"],
+          Annotation[#, 97, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[98],
+           "98"],
+          Annotation[#, 98, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[99],
+           "99"],
+          Annotation[#, 99, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[100],
+           "100"],
+          Annotation[#, 100, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[101],
+           "101"],
+          Annotation[#, 101, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[102],
+           "102"],
+          Annotation[#, 102, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[103],
+           "103"],
+          Annotation[#, 103, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[104],
+           "104"],
+          Annotation[#, 104, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[105],
+           "105"],
+          Annotation[#, 105, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[106],
+           "106"],
+          Annotation[#, 106, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[107],
+           "107"],
+          Annotation[#, 107, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[108],
+           "108"],
+          Annotation[#, 108, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[109],
+           "109"],
+          Annotation[#, 109, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[110],
+           "110"],
+          Annotation[#, 110, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[111],
+           "111"],
+          Annotation[#, 111, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[112],
+           "112"],
+          Annotation[#, 112, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[113],
+           "113"],
+          Annotation[#, 113, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[114],
+           "114"],
+          Annotation[#, 114, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[115],
+           "115"],
+          Annotation[#, 115, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[116],
+           "116"],
+          Annotation[#, 116, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[117],
+           "117"],
+          Annotation[#, 117, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[118],
+           "118"],
+          Annotation[#, 118, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[119],
+           "119"],
+          Annotation[#, 119, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[120],
+           "120"],
+          Annotation[#, 120, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[121],
+           "121"],
+          Annotation[#, 121, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[122],
+           "122"],
+          Annotation[#, 122, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[123],
+           "123"],
+          Annotation[#, 123, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[124],
+           "124"],
+          Annotation[#, 124, "Tooltip"]& ], 
+         TagBox[
+          TooltipBox[Point3DBox[125],
+           "125"],
+          Annotation[#, 125, "Tooltip"]& ]}}],
+      Annotation[#, VertexCoordinateRules -> CompressedData["
+1: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
+        "]]& ],
+     AspectRatio->Automatic,
+     ImageSize->{177., Automatic},
+     PlotRange->All,
+     PlotRangePadding->Scaled[0.1],
+     ViewPoint->{1.3, -2.4, 2.},
+     ViewVertical->{0., 0., 1.}], "}"}]}], "]"}]], "Output",
+ CellChangeTimes->{{3.6870375248566523`*^9, 3.6870375448975067`*^9}}]
+}, Open  ]]
+}, Open  ]]
 }, Open  ]]
 },
 WindowSize->{808, 610},
-WindowMargins->{{4, Automatic}, {Automatic, 4}},
+WindowMargins->{{Automatic, -59}, {Automatic, 0}},
 FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 28, \
 2016)",
 StyleDefinitions->"Default.nb"
@@ -46,7 +855,19 @@ CellTagsIndex->{}
 Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 111, 1, 92, "Title"],
-Cell[694, 25, 103, 1, 64, "Section"]
+Cell[CellGroupData[{
+Cell[716, 27, 103, 1, 64, "Section"],
+Cell[822, 30, 1054, 30, 107, "Text"],
+Cell[CellGroupData[{
+Cell[1901, 64, 223, 5, 35, "Input"],
+Cell[2127, 71, 115, 1, 32, "Output"]
+}, Open  ]],
+Cell[2257, 75, 363, 6, 68, "Text"],
+Cell[CellGroupData[{
+Cell[2645, 85, 949, 26, 100, "Input"],
+Cell[3597, 113, 26194, 720, 244, "Output"]
+}, Open  ]]
+}, Open  ]]
 }, Open  ]]
 }
 ]
