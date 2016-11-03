@@ -161,74 +161,42 @@ ui <- fluidPage(
 
 # Define server
 server <- function(input, output) {
-
-  # observeEvent(input$run,{
-  #   output$optimalPatch <- renderPlot({
-  # 
-  #     #progress bar
-  #     progress <- shiny::Progress$new()
-  #     progress$set(message = "Computing Optimal Patch Strategy", value = 0)
-  #     on.exit(progress$close())
-  # 
-  #     #redefine input as numerics
-  #     psurviveIn <- as.numeric(unlist(strsplit(input$psurvive,",")))
-  #     pfoodIn <- as.numeric(unlist(strsplit(input$pfood,",")))
-  #     costIn <- as.numeric(unlist(strsplit(input$cost,",")))
-  #     feedgainIn <- as.numeric(unlist(strsplit(input$feedgain,",")))
-  #     reprIn <- as.numeric(unlist(strsplit(input$repr,",")))
-  #     x_crit <- as.numeric(input$x_crit)
-  #     x_max <- as.numeric(input$x_max)
-  #     x_rep <- as.numeric(input$x_rep)
-  #     fend <- as.numeric(input$fend)
-  # 
-  #     updateProgress <- function() {
-  #       # progress$set(value = value, detail = detail)
-  #       progress$inc(1/(input$t_max-1))
-  #     }
-  # 
-  #     dynProgPatch(npatch = input$npatch,psurvive = psurviveIn,pfood = pfoodIn,cost = costIn,feedgain = feedgainIn,
-  #                  repr = reprIn,x_crit = x_crit,x_max = x_max,x_rep = x_rep,t_max = input$t_max,fend = fend,
-  #                  updateProgress=updateProgress)
-  #   })
-  # })
   
-
     output$optimalPatch <- renderPlot({
       
-      input$run
+      input$run #event handler
       
-      if (input$run == 0){
+      if(input$run == 0){ #no initial run
         return()
       }
-        
       
       #progress bar
       progress <- shiny::Progress$new()
       progress$set(message = "Computing Optimal Patch Strategy", value = 0)
       on.exit(progress$close())
-      
-      #redefine input as numerics
-      psurviveIn <- as.numeric(unlist(strsplit(input$psurvive,",")))
-      pfoodIn <- as.numeric(unlist(strsplit(input$pfood,",")))
-      costIn <- as.numeric(unlist(strsplit(input$cost,",")))
-      feedgainIn <- as.numeric(unlist(strsplit(input$feedgain,",")))
-      reprIn <- as.numeric(unlist(strsplit(input$repr,",")))
-      x_crit <- as.numeric(input$x_crit)
-      x_max <- as.numeric(input$x_max)
-      x_rep <- as.numeric(input$x_rep)
-      fend <- as.numeric(input$fend)
-      
+
+      #function to update progress
       updateProgress <- function() {
-        # progress$set(value = value, detail = detail)
         progress$inc(1/(input$t_max-1))
       }
       
-      isolate(dynProgPatch(npatch = input$npatch,psurvive = psurviveIn,pfood = pfoodIn,cost = costIn,feedgain = feedgainIn,
-                   repr = reprIn,x_crit = x_crit,x_max = x_max,x_rep = x_rep,t_max = input$t_max,fend = fend,
-                   updateProgress=updateProgress))
+      isolate({
+        #redefine input as numerics
+        psurviveIn <- as.numeric(unlist(strsplit(input$psurvive,",")))
+        pfoodIn <- as.numeric(unlist(strsplit(input$pfood,",")))
+        costIn <- as.numeric(unlist(strsplit(input$cost,",")))
+        feedgainIn <- as.numeric(unlist(strsplit(input$feedgain,",")))
+        reprIn <- as.numeric(unlist(strsplit(input$repr,",")))
+        x_crit <- as.numeric(input$x_crit)
+        x_max <- as.numeric(input$x_max)
+        x_rep <- as.numeric(input$x_rep)
+        fend <- as.numeric(input$fend)
+        #run dynamic programming optimization algorithm
+        dynProgPatch(npatch = input$npatch,psurvive = psurviveIn,pfood = pfoodIn,cost = costIn,feedgain = feedgainIn,
+                     repr = reprIn,x_crit = x_crit,x_max = x_max,x_rep = x_rep,t_max = input$t_max,fend = fend,
+                     updateProgress=updateProgress)
+      })
     })
-  
-
 }
 
 # Run the application
