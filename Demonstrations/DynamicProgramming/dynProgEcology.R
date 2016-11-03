@@ -29,6 +29,7 @@ fitness <- function(x,t,x_max,x_crit,f){
 #psurvive: numeric vector of survival probability upon travel to that patch
 #pfood: numeric vector of probability to find food at that patch
 #cost: numeric vector of cost in biomass to travel to that patch
+#feedgain: numeric vector of biomass gain from food at that patch
 #repr: numeric vector of maximal reproduction gain at that patch
 #x_crit: minimum biomass to survive
 #x_max: maximal biomass allowed
@@ -72,11 +73,11 @@ dynProgPatch <- function(npatch=3,psurvive=c(0.99,0.95,0.98),pfood=c(0.2,0.5,0.0
   }#next time t
   
   image(x=times,y=x_class[-1],z=bestpatch,zlim=c(0,npatch),main="Optimal Patch Selection",
-        col=c("Black",brewer.pal(npatch,"Spectral")),ylab="Time",xlab="Biomass")
+        col=c("Black",brewer.pal(npatch,"Spectral")),xlab="Time",ylab="Biomass")
   contour(x=1:t_max,y=x_class,z=f,add=TRUE,drawlabels=TRUE,labcex=2)
   legend(x="topleft",fill=c("Black",brewer.pal(npatch,"Spectral")),legend=c("Dead",paste0(1:npatch)),bty="n")
   legend(x="topright",legend="Fitness",lty=1,bty="n")
-  return(list(times=times,f=f,bestpatch=bestpatch))
+  # return(list(times=times,f=f,bestpatch=bestpatch))
 }
 
 
