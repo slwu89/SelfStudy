@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     30482,        867]
-NotebookOptionsPosition[     29831,        838]
-NotebookOutlinePosition[     30185,        854]
-CellTagsIndexPosition[     30142,        851]
+NotebookDataLength[     33394,        958]
+NotebookOptionsPosition[     32318,        915]
+NotebookOutlinePosition[     32681,        931]
+CellTagsIndexPosition[     32638,        928]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -833,13 +833,90 @@ k+D2OJYrRDCOF7Hhfsv9ciB5CG5+TyjkdeP4///z//B8HP8CfYgItg==
      ViewVertical->{0., 0., 1.}], "}"}]}], "]"}]], "Output",
  CellChangeTimes->{{3.6870375248566523`*^9, 3.6870375448975067`*^9}}]
 }, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["3.4 A Mutation Matrix for Point Mutations", "Section",
+ CellChangeTimes->{{3.6871929422155867`*^9, 3.687192952986514*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"seqI", "=", 
+   RowBox[{"RandomChoice", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1"}], "}"}], ",", "10"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"seqJ", "=", 
+   RowBox[{"RandomChoice", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1"}], "}"}], ",", "10"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.687192955497231*^9, 3.687192958933619*^9}, {
+  3.687193093141756*^9, 3.687193169579074*^9}}],
+
+Cell["\<\
+calculate probability that a replication of sequence i results in sequence j \
+(for binary genome of length 10 in this case) and given probability of point \
+mutation u.\
+\>", "Text",
+ CellChangeTimes->{{3.687193180358968*^9, 3.687193235006937*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"pointMutationProb", "[", 
+    RowBox[{"i_", ",", "j_", ",", "u_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dist", ",", "len"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"len", "=", 
+       RowBox[{"Length", "[", "i", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"dist", "=", 
+       RowBox[{"HammingDistance", "[", 
+        RowBox[{"i", ",", "j"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       SuperscriptBox["u", "dist"], " ", 
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{"1", "-", "u"}], ")"}], 
+        RowBox[{"len", "-", "dist"}]]}]}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.687193350165112*^9, 3.687193360260261*^9}, {
+  3.687193396913576*^9, 3.687193517898032*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"pointMutationProb", "[", 
+  RowBox[{"seqI", ",", "seqJ", ",", "0.15"}], "]"}]], "Input",
+ CellChangeTimes->{{3.687193519516203*^9, 3.687193523548751*^9}, {
+  3.687193703675284*^9, 3.687193705444759*^9}, {3.687193757011821*^9, 
+  3.687193760784355*^9}}],
+
+Cell[BoxData["0.00003369387216796874`"], "Output",
+ CellChangeTimes->{3.687193524494369*^9, 3.68719370573218*^9}]
 }, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Evolutionary Dynamics Ch4:", "Title",
+ CellChangeTimes->{{3.687195157187039*^9, 3.687195167450782*^9}}],
+
+Cell["Evolutionary Game Theory", "Section",
+ CellChangeTimes->{{3.687195171899563*^9, 3.687195174619482*^9}}]
 }, Open  ]]
 },
-WindowSize->{808, 610},
-WindowMargins->{{Automatic, -59}, {Automatic, 0}},
-FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 28, \
-2016)",
+WindowSize->{1070, 969},
+WindowMargins->{{-185, Automatic}, {844, Automatic}},
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+21, 2016)",
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -857,17 +934,31 @@ Cell[CellGroupData[{
 Cell[580, 22, 111, 1, 92, "Title"],
 Cell[CellGroupData[{
 Cell[716, 27, 103, 1, 64, "Section"],
-Cell[822, 30, 1054, 30, 107, "Text"],
+Cell[822, 30, 1054, 30, 88, "Text"],
 Cell[CellGroupData[{
 Cell[1901, 64, 223, 5, 35, "Input"],
 Cell[2127, 71, 115, 1, 32, "Output"]
 }, Open  ]],
-Cell[2257, 75, 363, 6, 68, "Text"],
+Cell[2257, 75, 363, 6, 49, "Text"],
 Cell[CellGroupData[{
-Cell[2645, 85, 949, 26, 100, "Input"],
-Cell[3597, 113, 26194, 720, 244, "Output"]
+Cell[2645, 85, 949, 26, 58, "Input"],
+Cell[3597, 113, 26194, 720, 210, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29840, 839, 128, 1, 64, "Section"],
+Cell[29971, 842, 499, 15, 54, "Input"],
+Cell[30473, 859, 259, 5, 49, "Text"],
+Cell[30735, 866, 868, 23, 121, "Input"],
+Cell[CellGroupData[{
+Cell[31628, 893, 276, 5, 32, "Input"],
+Cell[31907, 900, 113, 1, 32, "Output"]
 }, Open  ]]
 }, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[32081, 908, 109, 1, 92, "Title"],
+Cell[32193, 911, 109, 1, 64, "Section"]
 }, Open  ]]
 }
 ]
