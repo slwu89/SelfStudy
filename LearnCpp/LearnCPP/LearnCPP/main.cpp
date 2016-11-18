@@ -27,6 +27,20 @@ int main(int argc, const char * argv[]) {
     testTypeDef testTypeDefVar[] = {"a","b","c"};
     std::cout << testTypeDefVar[0] << std::endl;
     
+    /*
+     Pointers!!
+     */
+    //modifying what a pointer points to
+    int i, j;
+    i = 5; j = 2;
+    int const *p = &i; //p points to i, which is a const int
+    p = &j;  //p now points to j, which is not a const int
+    
+    //modifying a pointer itself
+    int k = 5;
+    int * const l = &k;
+    std::cout << "memory address" << l << " " << *l << std::endl;
+    *l = 42; //this is valid, now l points to the literal 42
     
     return 0;
 }
