@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[   1092482,      20609]
-NotebookOptionsPosition[   1075017,      20044]
-NotebookOutlinePosition[   1075377,      20060]
-CellTagsIndexPosition[   1075334,      20057]
+NotebookDataLength[   1113971,      21227]
+NotebookOptionsPosition[   1094755,      20607]
+NotebookOutlinePosition[   1095113,      20623]
+CellTagsIndexPosition[   1095070,      20620]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -20037,13 +20037,576 @@ Cell["\<\
 3. Given the following list of integers, find the five largest numbers in the \
 list. Then find the five smallest numbers in the list.\
 \>", "Text",
- CellChangeTimes->{{3.688671614415691*^9, 3.688671620718*^9}}]
+ CellChangeTimes->{{3.688671614415691*^9, 3.688671620718*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"nums", "=", 
+   RowBox[{"RandomInteger", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "100"}], ",", "100"}], "}"}], ",", 
+     RowBox[{"{", "25", "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Sort", "[", "nums", "]"}], "[", 
+   RowBox[{"[", 
+    RowBox[{"Range", "[", 
+     RowBox[{"1", ",", "5"}], "]"}], "]"}], "]"}], " ", 
+  RowBox[{"(*", 
+   RowBox[{"five", " ", "smallest"}], "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.688671762549999*^9, 3.6886718022275867`*^9}, {
+  3.6886718510813313`*^9, 3.688671894448379*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "97"}], ",", 
+   RowBox[{"-", "93"}], ",", 
+   RowBox[{"-", "86"}], ",", 
+   RowBox[{"-", "85"}], ",", 
+   RowBox[{"-", "84"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.688671857417807*^9, 3.6886719036503572`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Reverse", "[", 
+    RowBox[{"Sort", "[", "nums", "]"}], "]"}], "[", 
+   RowBox[{"[", 
+    RowBox[{"Range", "[", 
+     RowBox[{"1", ",", "5"}], "]"}], "]"}], "]"}], " ", 
+  RowBox[{"(*", 
+   RowBox[{"five", " ", "largest"}], "*)"}]}]], "Input",
+ CellChangeTimes->{{3.68867186063361*^9, 3.68867189926445*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"100", ",", "97", ",", "92", ",", "86", ",", "73"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.6886718670370483`*^9, 3.688671906674842*^9}}]
+}, Open  ]],
+
+Cell["\<\
+4. Use Table to create the following matrix. Once created, use Table again to \
+add all the elements on and above the diagonal.\
+\>", "Text",
+ CellChangeTimes->{{3.688671966799067*^9, 3.688671990556082*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"matrix", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"i", "*", "j"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "1", ",", "4"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"matrix", "//", "MatrixForm"}]}], "Input",
+ CellChangeTimes->{{3.6886720695971603`*^9, 3.6886720706134872`*^9}, {
+  3.6886721343135*^9, 3.688672176391159*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"1", "2", "3", "4"},
+     {"2", "4", "6", "8"},
+     {"3", "6", "9", "12"},
+     {"4", "8", "12", "16"}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{{3.68867214030348*^9, 3.6886721767097807`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"matrix", "[", 
+      RowBox[{"[", 
+       RowBox[{"i", ",", "j"}], "]"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "i", ",", "4"}], "}"}]}], "]"}], "//", 
+   RowBox[{
+    RowBox[{"Flatten", "[", 
+     RowBox[{"#", ",", "1"}], "]"}], "&"}]}], "//", "Total"}]], "Input",
+ CellChangeTimes->{{3.688672399855812*^9, 3.68867257850982*^9}, {
+   3.688672615363166*^9, 3.688672617671749*^9}, 3.688672651418764*^9, {
+   3.688672796213488*^9, 3.688672796664156*^9}, {3.6886730374790497`*^9, 
+   3.688673081093399*^9}}],
+
+Cell[BoxData["65"], "Output",
+ CellChangeTimes->{{3.68867242675871*^9, 3.68867254208993*^9}, {
+   3.6886725765757713`*^9, 3.688672578759636*^9}, 3.6886726183071823`*^9, 
+   3.688672652568177*^9, 3.688672797039611*^9, {3.688673046136159*^9, 
+   3.6886730819163837`*^9}}]
+}, Open  ]],
+
+Cell["\<\
+5. Rearrange the list of numbers one through ten so that any adjacent numbers \
+(for example, 1 and 2, 2 and 3, and so on) are not adjacent in the output.\
+\>", "Text",
+ CellChangeTimes->{{3.688673094313889*^9, 3.688673116329432*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"nums", "=", 
+  RowBox[{"Range", "[", "10", "]"}]}]], "Input",
+ CellChangeTimes->{{3.688673117681827*^9, 3.688673119816759*^9}, {
+  3.6886732106906557`*^9, 3.6886732124428167`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", "8", 
+   ",", "9", ",", "10"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.688673120204501*^9, {3.6886732049194803`*^9, 3.6886732130088663`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"oddNums", "=", 
+  RowBox[{"Take", "[", 
+   RowBox[{"nums", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "10", ",", "2"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6886732150639343`*^9, 3.688673317335931*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1", ",", "3", ",", "5", ",", "7", ",", "9"}], "}"}]], "Output",
+ CellChangeTimes->{{3.688673217616455*^9, 3.6886732202576323`*^9}, {
+  3.6886732750197697`*^9, 3.688673319141197*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"evenNums", "=", 
+  RowBox[{"Complement", "[", 
+   RowBox[{"nums", ",", "oddNums"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6886733214372587`*^9, 3.688673327409919*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2", ",", "4", ",", "6", ",", "8", ",", "10"}], "}"}]], "Output",
+ CellChangeTimes->{3.6886733277406893`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Riffle", "[", 
+  RowBox[{
+   RowBox[{"RotateLeft", "[", "evenNums", "]"}], ",", "oddNums"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.688673383149387*^9, 3.6886735437749443`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "4", ",", "1", ",", "6", ",", "3", ",", "8", ",", "5", ",", "10", ",", "7", 
+   ",", "2", ",", "9"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.688673390963385*^9, {3.6886734272986937`*^9, 3.688673433745903*^9}, {
+   3.68867346561686*^9, 3.688673544344589*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Partition", "[", 
+   RowBox[{"nums", ",", "5"}], "]"}], "//", 
+  RowBox[{
+   RowBox[{"Riffle", "[", 
+    RowBox[{
+     RowBox[{"#", "[", 
+      RowBox[{"[", "1", "]"}], "]"}], ",", 
+     RowBox[{"#", "[", 
+      RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "&"}], " ", 
+  RowBox[{"(*", 
+   RowBox[{"so", " ", "much", " ", "more", " ", "elegant"}], 
+   "*)"}]}]], "Input",
+ CellChangeTimes->{{3.688673571232501*^9, 3.688673629441182*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "1", ",", "6", ",", "2", ",", "7", ",", "3", ",", "8", ",", "4", ",", "9", 
+   ",", "5", ",", "10"}], "}"}]], "Output",
+ CellChangeTimes->{{3.6886735745534363`*^9, 3.6886736176120663`*^9}}]
+}, Open  ]],
+
+Cell["\<\
+6. Create a list of all prime numbers less than 100. Repeat for a list of \
+primes less than 1000. Consider using the functions Prime and PrimePi\
+\>", "Text",
+ CellChangeTimes->{{3.68867380324577*^9, 3.688673809463931*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PrimePi", "[", "100", "]"}], "//", 
+  RowBox[{
+   RowBox[{"Prime", "[", 
+    RowBox[{"Range", "[", 
+     RowBox[{"1", ",", "#"}], "]"}], "]"}], "&"}]}]], "Input",
+ CellChangeTimes->{{3.688673860002783*^9, 3.688673896930859*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "2", ",", "3", ",", "5", ",", "7", ",", "11", ",", "13", ",", "17", ",", 
+   "19", ",", "23", ",", "29", ",", "31", ",", "37", ",", "41", ",", "43", 
+   ",", "47", ",", "53", ",", "59", ",", "61", ",", "67", ",", "71", ",", 
+   "73", ",", "79", ",", "83", ",", "89", ",", "97"}], "}"}]], "Output",
+ CellChangeTimes->{{3.688673865239496*^9, 3.6886738975217667`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PrimePi", "[", "1000", "]"}], "//", 
+  RowBox[{
+   RowBox[{"Prime", "[", 
+    RowBox[{"Range", "[", 
+     RowBox[{"1", ",", "#"}], "]"}], "]"}], "&"}]}]], "Input",
+ CellChangeTimes->{3.688673908878564*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "2", ",", "3", ",", "5", ",", "7", ",", "11", ",", "13", ",", "17", ",", 
+   "19", ",", "23", ",", "29", ",", "31", ",", "37", ",", "41", ",", "43", 
+   ",", "47", ",", "53", ",", "59", ",", "61", ",", "67", ",", "71", ",", 
+   "73", ",", "79", ",", "83", ",", "89", ",", "97", ",", "101", ",", "103", 
+   ",", "107", ",", "109", ",", "113", ",", "127", ",", "131", ",", "137", 
+   ",", "139", ",", "149", ",", "151", ",", "157", ",", "163", ",", "167", 
+   ",", "173", ",", "179", ",", "181", ",", "191", ",", "193", ",", "197", 
+   ",", "199", ",", "211", ",", "223", ",", "227", ",", "229", ",", "233", 
+   ",", "239", ",", "241", ",", "251", ",", "257", ",", "263", ",", "269", 
+   ",", "271", ",", "277", ",", "281", ",", "283", ",", "293", ",", "307", 
+   ",", "311", ",", "313", ",", "317", ",", "331", ",", "337", ",", "347", 
+   ",", "349", ",", "353", ",", "359", ",", "367", ",", "373", ",", "379", 
+   ",", "383", ",", "389", ",", "397", ",", "401", ",", "409", ",", "419", 
+   ",", "421", ",", "431", ",", "433", ",", "439", ",", "443", ",", "449", 
+   ",", "457", ",", "461", ",", "463", ",", "467", ",", "479", ",", "487", 
+   ",", "491", ",", "499", ",", "503", ",", "509", ",", "521", ",", "523", 
+   ",", "541", ",", "547", ",", "557", ",", "563", ",", "569", ",", "571", 
+   ",", "577", ",", "587", ",", "593", ",", "599", ",", "601", ",", "607", 
+   ",", "613", ",", "617", ",", "619", ",", "631", ",", "641", ",", "643", 
+   ",", "647", ",", "653", ",", "659", ",", "661", ",", "673", ",", "677", 
+   ",", "683", ",", "691", ",", "701", ",", "709", ",", "719", ",", "727", 
+   ",", "733", ",", "739", ",", "743", ",", "751", ",", "757", ",", "761", 
+   ",", "769", ",", "773", ",", "787", ",", "797", ",", "809", ",", "811", 
+   ",", "821", ",", "823", ",", "827", ",", "829", ",", "839", ",", "853", 
+   ",", "857", ",", "859", ",", "863", ",", "877", ",", "881", ",", "883", 
+   ",", "887", ",", "907", ",", "911", ",", "919", ",", "929", ",", "937", 
+   ",", "941", ",", "947", ",", "953", ",", "967", ",", "971", ",", "977", 
+   ",", "983", ",", "991", ",", "997"}], "}"}]], "Output",
+ CellChangeTimes->{3.688673909300351*^9}]
+}, Open  ]],
+
+Cell["\<\
+7. Make a histogram of the frequencies of the leading digit in the first 10 \
+000 Fibonacci numbers. The resulting distribution is an instance of Benford\
+\[CloseCurlyQuote]s Law, which concerns the frequency of the leading digits \
+in many kinds of data. The phenomenon, whereby a 1 occurs about 30% of the \
+time, a 2 occurs about 17.6% of the time, and so on, has been shown to occur \
+in well-known numerical sequences, population counts, death rates, Fibonacci \
+numbers, and many more, and has even been used to detect corporate and tax \
+fraud.\
+\>", "Text",
+ CellChangeTimes->{{3.688673937637171*^9, 3.6886739439181557`*^9}, 
+   3.688674296760582*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"fibonacciSeq", "[", "n_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"out", "=", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"out", ",", 
+          RowBox[{
+           RowBox[{"out", "[", 
+            RowBox[{"[", 
+             RowBox[{"i", "-", "2"}], "]"}], "]"}], "+", 
+           RowBox[{"out", "[", 
+            RowBox[{"[", 
+             RowBox[{"i", "-", "1"}], "]"}], "]"}]}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "3", ",", "n"}], "}"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", "out"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.688674336976222*^9, 3.688674430092195*^9}, {
+  3.68867447396983*^9, 3.688674527511805*^9}, {3.6886745616626177`*^9, 
+  3.688674588083509*^9}, {3.688674667448697*^9, 3.688674667563298*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"firstTenThousand", "=", 
+   RowBox[{"fibonacciSeq", "[", "10000", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.68867459092015*^9, 3.6886746517357683`*^9}, {
+  3.688674752531845*^9, 3.688674758387086*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"First", "[", 
+     RowBox[{"IntegerDigits", "[", "#", "]"}], "]"}], "&"}], "/@", 
+   "firstTenThousand"}], "//", 
+  RowBox[{
+   RowBox[{"Histogram", "[", 
+    RowBox[{"#", ",", "Automatic", ",", "\"\<Probability\>\""}], "]"}], 
+   "&"}]}]], "Input",
+ CellChangeTimes->{{3.6886747615988626`*^9, 3.6886747760757847`*^9}, {
+  3.688674813569009*^9, 3.688674819726173*^9}, {3.688674850134211*^9, 
+  3.6886749591628447`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{
+   {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], EdgeForm[{
+    Opacity[0.623], Thickness[Small]}], {}, 
+    {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], EdgeForm[{
+     Opacity[0.623], Thickness[Small]}], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{1., 0}, {2., 0.3011}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{28.21597277822258, 
+          64.63804376834801}, {-102.3432527414761, 91.72224626706648}}],
+        StatusArea[#, 0.3011]& ,
+        TagBoxNote->"0.3011"],
+       StyleBox["0.3011`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.3011, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{2., 0}, {3., 0.1762}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{64.13804376834801, 
+          100.56011475847345`}, {-22.04989230917134, 91.72224626706648}}],
+        StatusArea[#, 0.1762]& ,
+        TagBoxNote->"0.1762"],
+       StyleBox["0.1762`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.1762, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{3., 0}, {4., 0.125}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{100.06011475847345`, 136.48218574859888`}, {
+          10.864599717522054`, 91.72224626706648}}],
+        StatusArea[#, 0.125]& ,
+        TagBoxNote->"0.125"],
+       StyleBox["0.125`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.125, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{4., 0}, {5., 0.0968}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{135.98218574859888`, 172.4042567387243}, {
+          28.993284779099277`, 91.72224626706648}}],
+        StatusArea[#, 0.0968]& ,
+        TagBoxNote->"0.0968"],
+       StyleBox["0.0968`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.0968, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{5., 0}, {6., 0.0792}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{171.9042567387243, 208.32632772884975`}, {
+          40.30764141327513, 91.72224626706648}}],
+        StatusArea[#, 0.0792]& ,
+        TagBoxNote->"0.0792"],
+       StyleBox["0.0792`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.0792, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{6., 0}, {7., 0.0668}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{207.82632772884975`, 244.24839871897518`}, {
+          48.27911995098994, 91.72224626706648}}],
+        StatusArea[#, 0.0668]& ,
+        TagBoxNote->"0.0668"],
+       StyleBox["0.0668`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.0668, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{7., 0}, {8., 0.058}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{243.74839871897518`, 280.1704697091006}, {
+          53.93629826807786, 91.72224626706648}}],
+        StatusArea[#, 0.058]& ,
+        TagBoxNote->"0.058"],
+       StyleBox["0.058`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.058, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{8., 0}, {9., 0.0513}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{279.6704697091006, 316.09254069922605`}, {
+          58.24346812313345, 91.72224626706648}}],
+        StatusArea[#, 0.0513]& ,
+        TagBoxNote->"0.0513"],
+       StyleBox["0.0513`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.0513, {}], "Tooltip"]& ], 
+     TagBox[
+      TooltipBox[
+       TagBox[
+        DynamicBox[{
+          FEPrivate`If[
+           CurrentValue["MouseOver"], 
+           EdgeForm[{
+             GrayLevel[0.5], 
+             AbsoluteThickness[1.5], 
+             Opacity[0.66]}], {}, {}], 
+          RectangleBox[{9., 0}, {10., 0.0456}, "RoundingRadius" -> 0]},
+         ImageSizeCache->{{315.59254069922605`, 352.01461168935145`}, {
+          61.90777680579267, 91.72224626706648}}],
+        StatusArea[#, 0.0456]& ,
+        TagBoxNote->"0.0456"],
+       StyleBox["0.0456`", {}, StripOnInput -> False]],
+      Annotation[#, 
+       Style[0.0456, {}], 
+       "Tooltip"]& ]}, {}, {}}, {{}, {}, {}, {}, {}, {}, {}, {}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0.8200000000000001, 0},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  PlotRange->{{1., 10.}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{{3.688674862242*^9, 3.688674865741219*^9}, {
+  3.688674919594853*^9, 3.688674959895132*^9}}]
+}, Open  ]],
+
+Cell["\<\
+8. Take the partitioned list of integers from the solution to Exercise 5 in \
+Section 3.1 and use Grid to display the partitioned list in a grid similar to \
+the one below.\
+\>", "Text",
+ CellChangeTimes->{{3.688675148335801*^9, 3.688675153551176*^9}}]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{1080, 1816},
-WindowMargins->{{28, Automatic}, {Automatic, 0}},
+WindowSize->{1080, 729},
+WindowMargins->{{9, Automatic}, {Automatic, 0}},
 FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
 21, 2016)",
 StyleDefinitions->"Default.nb"
@@ -20302,7 +20865,7 @@ Cell[854562, 14798, 916, 29, 32, "Output"]
 Cell[855493, 14830, 450, 7, 68, "Text"],
 Cell[CellGroupData[{
 Cell[855968, 14841, 340, 8, 32, "Input"],
-Cell[856311, 14851, 7703, 214, 226, "Output"]
+Cell[856311, 14851, 7703, 214, 236, "Output"]
 }, Open  ]],
 Cell[864029, 15068, 257, 5, 30, "Text"],
 Cell[CellGroupData[{
@@ -20335,7 +20898,7 @@ Cell[883813, 15448, 7597, 132, 237, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[891447, 15585, 370, 9, 32, "Input"],
-Cell[891820, 15596, 13583, 385, 226, "Output"]
+Cell[891820, 15596, 13583, 385, 235, "Output"]
 }, Open  ]],
 Cell[905418, 15984, 752, 12, 125, "Text"],
 Cell[CellGroupData[{
@@ -20607,7 +21170,62 @@ Cell[1073344, 19994, 822, 22, 75, "Input"],
 Cell[1074169, 20018, 285, 6, 32, "Output"],
 Cell[1074457, 20026, 284, 6, 32, "Output"]
 }, Open  ]],
-Cell[1074756, 20035, 221, 4, 30, "Text"]
+Cell[1074756, 20035, 221, 4, 30, "Text"],
+Cell[CellGroupData[{
+Cell[1075002, 20043, 620, 18, 54, "Input"],
+Cell[1075625, 20063, 271, 8, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1075933, 20076, 354, 10, 32, "Input"],
+Cell[1076290, 20088, 180, 4, 32, "Output"]
+}, Open  ]],
+Cell[1076485, 20095, 217, 4, 30, "Text"],
+Cell[CellGroupData[{
+Cell[1076727, 20103, 479, 13, 54, "Input"],
+Cell[1077209, 20118, 729, 20, 92, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1077975, 20143, 683, 18, 32, "Input"],
+Cell[1078661, 20163, 269, 4, 32, "Output"]
+}, Open  ]],
+Cell[1078945, 20170, 244, 4, 30, "Text"],
+Cell[CellGroupData[{
+Cell[1079214, 20178, 204, 4, 32, "Input"],
+Cell[1079421, 20184, 256, 6, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1079714, 20195, 243, 6, 32, "Input"],
+Cell[1079960, 20203, 222, 4, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1080219, 20212, 194, 4, 32, "Input"],
+Cell[1080416, 20218, 148, 3, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1080601, 20226, 204, 5, 32, "Input"],
+Cell[1080808, 20233, 303, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1081148, 20245, 468, 14, 32, "Input"],
+Cell[1081619, 20261, 231, 5, 32, "Output"]
+}, Open  ]],
+Cell[1081865, 20269, 234, 4, 30, "Text"],
+Cell[CellGroupData[{
+Cell[1082124, 20277, 263, 7, 32, "Input"],
+Cell[1082390, 20286, 407, 7, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1082834, 20298, 240, 7, 32, "Input"],
+Cell[1083077, 20307, 2193, 31, 159, "Output"]
+}, Open  ]],
+Cell[1085285, 20341, 669, 11, 87, "Text"],
+Cell[1085957, 20354, 1047, 28, 96, "Input"],
+Cell[1087007, 20384, 242, 5, 32, "Input"],
+Cell[CellGroupData[{
+Cell[1087274, 20393, 479, 13, 32, "Input"],
+Cell[1087756, 20408, 6682, 186, 236, "Output"]
+}, Open  ]],
+Cell[1094453, 20597, 262, 5, 49, "Text"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
