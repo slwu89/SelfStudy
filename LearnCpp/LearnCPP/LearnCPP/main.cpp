@@ -11,6 +11,14 @@
 //test making a typedef
 typedef char testTypeDef[3];
 
+//test making a struct
+struct point {
+    int x;
+    int y;
+    point(int xIn, int yIn) : x(xIn), y(yIn) {};
+};
+
+//main routine
 int main(int argc, const char * argv[]) {
     // insert code here...
     std::cout << "Hello, World!\n";
@@ -41,6 +49,12 @@ int main(int argc, const char * argv[]) {
     int * const l = &k;
     std::cout << "memory address" << l << " " << *l << std::endl;
     *l = 42; //this is valid, now l points to the literal 42
+    
+    /*
+     struct
+     */
+    point p1(4, 5);
+    std::cout << "p1 info: " << p1.x << " " << p1.y << std::endl;
     
     return 0;
 }
