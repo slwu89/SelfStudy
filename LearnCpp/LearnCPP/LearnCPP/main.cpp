@@ -15,7 +15,8 @@ typedef char testTypeDef[3];
 struct point {
     int x;
     int y;
-    point(int xIn, int yIn) : x(xIn), y(yIn) {};
+    std::string str;
+    point(int xIn, int yIn, std::string strIn) : x(xIn), y(yIn), str(strIn) {};
 };
 
 //main routine
@@ -47,14 +48,15 @@ int main(int argc, const char * argv[]) {
     //modifying a pointer itself
     int k = 5;
     int * const l = &k;
-    std::cout << "memory address" << l << " " << *l << std::endl;
+    std::cout << "memory address: " << l << ", value that l points to: " << *l << ", what does &l return? " << &l << std::endl;
     *l = 42; //this is valid, now l points to the literal 42
     
     /*
      struct
      */
-    point p1(4, 5);
-    std::cout << "p1 info: " << p1.x << " " << p1.y << std::endl;
+    point p1(4, 5, "hi");
+    std::cout << "p1 x: " << p1.x << ", p1 y: " << p1.y << std::endl;
+    std::cout << "putting string into struct, p1 str: " << p1.str  << std::endl;
     
     return 0;
 }
