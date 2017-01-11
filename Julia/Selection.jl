@@ -76,19 +76,84 @@ end
 
 function mutation_event()
   haplotype = get_random_haplotype()
+  if pop[haplotype] > 1
+    pop[haplotype] -= 1
+    new_haplotype = get_mutant(haplotype)
+      if new_haplotype in collect(keys(pop))
+        pop[new_haplotype] += 1
+      else
+        pop[new_haplotype] = 1
+      end
+      if !(new_haplotype in collect(keys(fitness)))
+        fitness[new_haplotype] = get_fitness(haplotype)
+      end
+    end
+end
+
+function mutation_step()
+  mutation_count = get_mutation_count()
+  for i in 1:mutation_count
+    mutation_event()
+  end
+end
+
+#Genetic drift and fitness affect which haplotypes make it to the next generation
+#fitness weights the multinomial draw
+
+function get_offspring_counts()
+  haplotypes = collect(keys(pop))
+  frequencies = [pop[haplotype] / pop_size for haplotype in haplotypes]
+  fitnesses = [fitness[haplotype] for haplotype in haplotypes]
+  weights = [x * y for (x,y) in zip(frequencies,fitnesses)]
+  total = sum(weights)
+  weights = [x / total for x in weights]
+  return rand(Multinomial(pop_size, weights))
+end
+
+function offspring_step()
+  counts = get_offspring_counts()
+  for (haplotype,count) in zip(collect(keys(pop)),counts)
+    if count > 0
+      pop[haplotype] = count
+    else
+      delete!(pop,haplotype)
+    end
+  end
+end
+
+#Combine and iterate
+
+function time_step()
+  mutation_step()
+  offspring_step()
+end
+
+generations = 5
+
+function simulate()
+  for i in 1:generations
+    time_step()
+  end
+end
+
+#Record
+#We want to keep a record of past population frequencies to understand dynamics through time. At each step in the simulation, we append to a history object.
+
+history = [] #init history
+
+function simulate()
+  clone_pop = pop
+  append!(history,clone_pop)
+  for i in 1:generations
+    time_step()
+    clone_pop = pop
+    append!(history,clone_pop)
+  end
 end
 
 
+#########################################################
+#  Analyze Trajectories
+##########################################################
 
-
-def mutation_event():
-    haplotype = get_random_haplotype()
-    if pop[haplotype] > 1:
-        pop[haplotype] -= 1
-        new_haplotype = get_mutant(haplotype)
-        if new_haplotype in pop:
-            pop[new_haplotype] += 1
-        else:
-            pop[new_haplotype] = 1
-        if new_haplotype not in fitness:
-            fitness[new_haplotype] = get_fitness(haplotype)
+#Calculate diversity
