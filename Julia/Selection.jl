@@ -21,7 +21,7 @@ alphabet = ["A","T"]
 base_haplotype = "AAAAAAAAAA"
 fitness_effect = 1.1 #fitness effect if a functional mutation  occurs
 fitness_chance = 0.1 #chance that a mutation has a fitness effect
-
+allele_frequencies = [0.5,0.5]
 
 #Population of haplotypes maps to counts and fitnesses:
 #Store this as a lightweight dictionary that maps a string to a count
@@ -34,6 +34,13 @@ pop["AATTTAAAAA"] = 30
 fitness = Dict("AAAAAAAAAA" => 1.0)
 fitness["AAATAAAAAA"] = 1.05
 fitness["AATTTAAAAA"] = 1.10
+
+#Generate random haplotypes
+function generate_haplotype()
+  hap = wsample(alphabet,allele_frequencies)
+  [hap = hap * wsample(alphabet,allele_frequencies) for i in 2:seq_length]
+  return hap
+end
 
 #Add mutation
 
@@ -157,3 +164,14 @@ end
 ##########################################################
 
 #Calculate diversity
+function get_distance(seq_a,seq_b)
+  diffs = 0
+  seqLen = length(seq_a)
+  # assert length(seq_q) == length(seq_b) FIX LATER
+  for (chr_a, chr_b) in zip(seq_a, seq_b)
+    if chr_a != chr_b
+      diffs += 1
+    end
+  end
+  return diffs / seqLen
+end
