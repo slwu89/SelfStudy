@@ -8,10 +8,12 @@
 #################################################################
 
 using Distributions
+using Gadfly
+using DataFrames
 
 #########################################################
 #  Make population dynamic model
-##########################################################
+#########################################################
 
 #Basic Parameters
 
@@ -34,6 +36,18 @@ pop["AATTTAAAAA"] = 30
 fitness = Dict("AAAAAAAAAA" => 1.0)
 fitness["AAATAAAAAA"] = 1.05
 fitness["AATTTAAAAA"] = 1.10
+
+#Reset all global Parameters
+function reset_pop()
+  global pop, fitness, history
+  pop = Dict("AAAAAAAAAA" => 40)
+  pop["AAATAAAAAA"] = 30
+  pop["AATTTAAAAA"] = 30
+  fitness = Dict("AAAAAAAAAA" => 1.0)
+  fitness["AAATAAAAAA"] = 1.05
+  fitness["AATTTAAAAA"] = 1.10
+  history = []
+end
 
 #Generate random haplotypes
 function generate_haplotype()
@@ -149,21 +163,23 @@ end
 history = [] #init history
 
 function simulate()
-  clone_pop = pop
-  append!(history,clone_pop)
+  local clone_pop
+  clone_pop = deepcopy(pop)
+  push!(history,clone_pop)
   for i in 1:generations
     time_step()
-    clone_pop = pop
-    append!(history,clone_pop)
+    clone_pop = deepcopy(pop)
+    push!(history,clone_pop)
   end
 end
 
+simulate()
 
 #########################################################
 #  Analyze Trajectories
-##########################################################
+#########################################################
 
-#Calculate diversity
+#Calculate hamming distance
 function get_distance(seq_a,seq_b)
   diffs = 0
   seqLen = length(seq_a)
@@ -175,3 +191,46 @@ function get_distance(seq_a,seq_b)
   end
   return diffs / seqLen
 end
+
+#Calculate population level diversity
+function get_diversity(population)
+  haplotypes = collect(keys(population))
+  haplotype_count = length(haplotypes)
+  diversity = 0
+  for i in 1:haplotype_count, j in 1:haplotype_count
+    haplotype_a = haplotypes[i]
+    haplotype_b = haplotypes[j]
+    frequency_a = population[haplotype_a] / pop_size
+    frequency_b = population[haplotype_b] / pop_size
+    frequency_pair = frequency_a * frequency_b
+    diversity += frequency_pair * get_distance(haplotype_a,haplotype_b)
+  end
+  return diversity
+end
+
+function get_diversity_trajectory()
+  trajectory = [get_diversity(generation) for generation in history]
+  return trajectory
+end
+
+
+#########################################################
+#  Analyze and Plot Diversity & Divergence
+#########################################################
+
+trajectory = get_diversity_trajectory()
+
+
+
+
+
+
+
+
+
+def diversity_plot():
+    mpl.rcParams['font.size']=14
+    trajectory = get_diversity_trajectory()
+    plt.plot(trajectory, "#447CCD")
+    plt.ylabel("diversity")
+    plt.xlabel("generation")
