@@ -251,7 +251,7 @@ plot(divergenceDf, y=:traj, Geom.line, Geom.point,
 
 function get_frequency(haplotype,generation)
   pop_at_generation = history[generation]
-  if haplotype in collect(key(pop_at_generation))
+  if haplotype in collect(keys(pop_at_generation))
     return pop_at_generation[haplotype] / pop_size
   else
     return 0
