@@ -215,22 +215,50 @@ end
 
 
 #########################################################
-#  Analyze and Plot Diversity & Divergence
+#  Plot Diversity, Divergence, Haplotype & SNP Trajectories
 #########################################################
 
-trajectory = get_diversity_trajectory()
+#same plots
 
+diversityDf = DataFrame(traj=get_diversity_trajectory())
 
+plot(diversityDf, y=:traj, Geom.line, Geom.point,
+  Theme(default_color=color("#447CCD")),Guide.XLabel("Generation"),Guide.YLabel("Diversity"))
 
+###Analyze and plot Divergence###
+function get_divergence(population)
+  haplotypes = collect(keys(population))
+  divergence = 0
+  for haplotype in haplotypes
+    frequency = population[haplotype] / pop_size
+    divergence += frequency * get_distance(base_haplotype, haplotype)
+  end
+  return divergence
+end
 
+function get_divergence_trajectory()
+  trajectory = [get_divergence(generation) for generation in history]
+  return trajectory
+end
 
+#plot divergence
+divergenceDf = DataFrame(traj=get_divergence_trajectory())
 
+plot(divergenceDf, y=:traj, Geom.line, Geom.point,
+  Theme(default_color=color("#447CCD")),Guide.XLabel("Generation"),Guide.YLabel("Divergence"))
 
+###Haplotype Trajectories##
 
+function get_frequency(haplotype,generation)
+  pop_at_generation = history[generation]
+  if haplotype in collect(key(pop_at_generation))
+    return pop_at_generation[haplotype] / pop_size
+  else
+    return 0
+  end
+end
 
-def diversity_plot():
-    mpl.rcParams['font.size']=14
-    trajectory = get_diversity_trajectory()
-    plt.plot(trajectory, "#447CCD")
-    plt.ylabel("diversity")
-    plt.xlabel("generation")
+function get_trajectory(haplotype)
+  trajectory = [get_frequency(haplotype,gen) for gen in 1:generations]
+  return trajectory
+end
