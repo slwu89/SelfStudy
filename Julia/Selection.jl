@@ -183,7 +183,7 @@ simulate()
 function get_distance(seq_a,seq_b)
   diffs = 0
   seqLen = length(seq_a)
-  # assert length(seq_q) == length(seq_b) FIX LATER
+  assert(length(seq_a) == length(seq_b))
   for (chr_a, chr_b) in zip(seq_a, seq_b)
     if chr_a != chr_b
       diffs += 1
@@ -247,7 +247,9 @@ divergenceDf = DataFrame(traj=get_divergence_trajectory())
 plot(divergenceDf, y=:traj, Geom.line, Geom.point,
   Theme(default_color=color("#447CCD")),Guide.XLabel("Generation"),Guide.YLabel("Divergence"))
 
-###Haplotype Trajectories##
+  #########################################################
+  #  Haplotype Trajectories
+  #########################################################
 
 function get_frequency(haplotype,generation)
   pop_at_generation = history[generation]
@@ -261,4 +263,70 @@ end
 function get_trajectory(haplotype)
   trajectory = [get_frequency(haplotype,gen) for gen in 1:generations]
   return trajectory
+end
+
+function get_all_haplotypes()
+  haplotypes = []
+  for generation in history
+    for haplotype in collect(keys(generation))
+      push!(haplotypes,haplotype)
+    end
+  end
+  return haplotypes
+end
+
+colors = ["#781C86", "#571EA2", "#462EB9", "#3F47C9", "#3F63CF", "#447CCD", "#4C90C0", "#56A0AE", "#63AC9A", "#72B485", "#83BA70", "#96BD60", "#AABD52", "#BDBB48", "#CEB541", "#DCAB3C", "#E49938", "#E68133", "#E4632E", "#DF4327", "#DB2122"]
+
+colors_lighter = ["#A567AF", "#8F69C1", "#8474D1", "#7F85DB", "#7F97DF", "#82A8DD", "#88B5D5", "#8FC0C9", "#97C8BC", "#A1CDAD", "#ACD1A0", "#B9D395", "#C6D38C", "#D3D285", "#DECE81", "#E8C77D", "#EDBB7A", "#EEAB77", "#ED9773", "#EA816F", "#E76B6B"]
+
+function stacked_trajectory_plot(xlabel="generation")
+  haplotypes = get_all_haplotypes()
+  trajectories = [get_trajectory(haplotype) for haplotype in haplotypes]
+  #need to do the plotting here
+end
+
+
+# def stacked_trajectory_plot(xlabel="generation"):
+#     mpl.rcParams['font.size']=18
+#     haplotypes = get_all_haplotypes()
+#     trajectories = [get_trajectory(haplotype) for haplotype in haplotypes]
+#     plt.stackplot(range(generations), trajectories, colors=colors_lighter)
+#     plt.ylim(0, 1)
+#     plt.ylabel("frequency")
+#     plt.xlabel(xlabel)
+
+#########################################################
+#  SNP Trajectories
+#########################################################
+
+function get_snp_frequency(site,generation)
+  minor_allele_frequency = 0.0
+  pop_at_generation = history[generation]
+  for haplotype in collect(keys(pop_at_generation))
+    allele = haplotype[site]
+    frequency = pop_at_generation[haplotype] / pop_size
+    if allele != 'A' #note that allele is char not string
+      minor_allele_frequency += frequency
+    end
+  end
+  return minor_allele_frequency
+end
+
+function get_snp_trajectory(site)
+  trajectory = [get_snp_frequency(site,gen) for gen in 1:generations]
+  return trajectory
+end
+
+function get_all_snps()
+  snps = Set()
+  for generation in history
+    for haplotype in collect(keys(generation))
+      for site in 1:seq_length
+        if haplotype[site] != 'A'
+          push!(snps,site)
+        end
+      end
+    end
+  end
+  return snps
 end
