@@ -1,16 +1,9 @@
 
-# coding: utf-8
-
 # # Wright-Fisher model of mutation, selection and random genetic drift
-
-# A Wright-Fisher model has a fixed population size *N* and discrete non-overlapping generations. Each generation, each individual has a random number of offspring whose mean is proportional to the individual's fitness. Each generation, mutation may occur. Mutations may increase or decrease individual's fitness, which affects the chances of that individual's offspring in subsequent generations.
-
+# A Wright-Fisher model has a fixed population size *N* and discrete non-overlapping generations.
+# Each generation, each individual has a random number of offspring whose mean is proportional to the individual's fitness. Each generation, mutation may occur. Mutations may increase or decrease individual's fitness, which affects the chances of that individual's offspring in subsequent generations.
 # Here, I'm using a fitness model where some proportion of the time a mutation will have a fixed fitness effect, increasing or decreasing fitness by a fixed amount.
-
 # ## Setup
-
-# In[1]:
-
 import numpy as np
 import itertools
 
@@ -19,110 +12,42 @@ import itertools
 
 # ### Basic parameters
 
-# In[2]:
 
 pop_size = 100
-
-
-# In[3]:
-
 seq_length = 10
-
-
-# In[4]:
-
 alphabet = ['A', 'T']
-
-
-# In[5]:
-
 base_haplotype = "AAAAAAAAAA"
-
-
-# In[6]:
-
 fitness_effect = 1.1 # fitness effect if a functional mutation occurs
-
-
-# In[7]:
-
 fitness_chance = 0.1 # chance that a mutation has a fitness effect
-
 
 # ### Population of haplotypes maps to counts and fitnesses
 
 # Store this as a lightweight Dictionary that maps a string to a count. All the sequences together will have count *N*.
 
-# In[8]:
-
 pop = {}
-
-
-# In[9]:
-
 pop["AAAAAAAAAA"] = 40
-
-
-# In[10]:
-
 pop["AAATAAAAAA"] = 30
-
-
-# In[11]:
-
 pop["AATTTAAAAA"] = 30
 
 
 # *Map haplotype string to fitness float.*
-
-# In[12]:
-
 fitness = {}
-
-
-# In[13]:
-
 fitness["AAAAAAAAAA"] = 1.0
-
-
-# In[14]:
-
 fitness["AAATAAAAAA"] = 1.05
-
-
-# In[15]:
-
 fitness["AATTTAAAAA"] = 1.10
-
-
-# In[16]:
-
 pop["AAATAAAAAA"]
-
-
-# In[17]:
-
 fitness["AAATAAAAAA"]
-
 
 # ### Add mutation
 
-# In[18]:
-
 mutation_rate = 0.005 # per gen per individual per site
-
-
-# In[19]:
 
 def get_mutation_count():
     mean = mutation_rate * pop_size * seq_length
     return np.random.poisson(mean)
 
-
-# In[20]:
-
 def get_random_haplotype():
-    haplotypes = pop.keys() 
+    haplotypes = pop.keys()
     frequencies = [x/float(pop_size) for x in pop.values()]
     total = sum(frequencies)
     frequencies = [x / total for x in frequencies]
@@ -141,9 +66,6 @@ def get_mutant(haplotype):
 
 
 # *Mutations have fitness effects*
-
-# In[22]:
-
 def get_fitness(haplotype):
     old_fitness = fitness[haplotype]
     if (np.random.random() < fitness_chance):
@@ -151,15 +73,10 @@ def get_fitness(haplotype):
     else:
         return old_fitness
 
-
-# In[23]:
-
 get_fitness("AAAAAAAAAA")
 
 
 # *If a mutation event creates a new haplotype, assign it a random fitness.*
-
-# In[24]:
 
 def mutation_event():
     haplotype = get_random_haplotype()
@@ -173,23 +90,11 @@ def mutation_event():
         if new_haplotype not in fitness:
             fitness[new_haplotype] = get_fitness(haplotype)
 
-
-# In[109]:
-
 mutation_event()
-
-
-# In[27]:
 
 pop
 
-
-# In[28]:
-
 fitness
-
-
-# In[25]:
 
 def mutation_step():
     mutation_count = get_mutation_count()
@@ -200,9 +105,6 @@ def mutation_step():
 # ### Genetic drift and fitness affect which haplotypes make it to the next generation
 
 # *Fitness weights the multinomial draw.*
-
-# In[26]:
-
 def get_offspring_counts():
     haplotypes = pop.keys()
     frequencies = [pop[haplotype]/float(pop_size) for haplotype in haplotypes]
@@ -212,13 +114,7 @@ def get_offspring_counts():
     weights = [x / total for x in weights]
     return list(np.random.multinomial(pop_size, weights))
 
-
-# In[30]:
-
 get_offspring_counts()
-
-
-# In[28]:
 
 def offspring_step():
     counts = get_offspring_counts()
@@ -231,19 +127,11 @@ def offspring_step():
 
 # ### Combine and iterate
 
-# In[31]:
-
 def time_step():
     mutation_step()
     offspring_step()
 
-
-# In[32]:
-
 generations = 5
-
-
-# In[35]:
 
 def simulate():
     for i in range(generations):
@@ -254,12 +142,7 @@ def simulate():
 
 # We want to keep a record of past population frequencies to understand dynamics through time. At each step in the simulation, we append to a history object.
 
-# In[33]:
-
 history = []
-
-
-# In[34]:
 
 def simulate():
     clone_pop = dict(pop)
@@ -269,13 +152,8 @@ def simulate():
         clone_pop = dict(pop)
         history.append(clone_pop)
 
-
-# In[35]:
-
 simulate()
 
-
-# In[41]:
 
 history[1]
 
@@ -283,8 +161,6 @@ history[1]
 # ## Analyze trajectories
 
 # ### Calculate diversity
-
-# In[42]:
 
 def get_distance(seq_a, seq_b):
     diffs = 0
@@ -294,9 +170,6 @@ def get_distance(seq_a, seq_b):
         if chr_a != chr_b:
             diffs += 1
     return diffs / float(length)
-
-
-# In[43]:
 
 def get_diversity(population):
     haplotypes = population.keys()
@@ -312,9 +185,6 @@ def get_diversity(population):
             diversity += frequency_pair * get_distance(haplotype_a, haplotype_b)
     return diversity
 
-
-# In[44]:
-
 def get_diversity_trajectory():
     trajectory = [get_diversity(generation) for generation in history]
     return trajectory
@@ -322,26 +192,19 @@ def get_diversity_trajectory():
 
 # ### Plot diversity
 
-# In[45]:
-
 get_ipython().magic('matplotlib inline')
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-
-# In[46]:
-
 def diversity_plot():
     mpl.rcParams['font.size']=14
     trajectory = get_diversity_trajectory()
-    plt.plot(trajectory, "#447CCD")    
+    plt.plot(trajectory, "#447CCD")
     plt.ylabel("diversity")
     plt.xlabel("generation")
 
 
 # ### Analyze and plot divergence
-
-# In[47]:
 
 def get_divergence(population):
     haplotypes = population.keys()
@@ -351,27 +214,19 @@ def get_divergence(population):
         divergence += frequency * get_distance(base_haplotype, haplotype)
     return divergence
 
-
-# In[48]:
-
 def get_divergence_trajectory():
     trajectory = [get_divergence(generation) for generation in history]
     return trajectory
-
-
-# In[49]:
 
 def divergence_plot():
     mpl.rcParams['font.size']=14
     trajectory = get_divergence_trajectory()
     plt.plot(trajectory, "#447CCD")
     plt.ylabel("divergence")
-    plt.xlabel("generation") 
+    plt.xlabel("generation")
 
 
 # ### Plot haplotype trajectories
-
-# In[50]:
 
 def get_frequency(haplotype, generation):
     pop_at_generation = history[generation]
@@ -380,35 +235,20 @@ def get_frequency(haplotype, generation):
     else:
         return 0
 
-
-# In[51]:
-
 def get_trajectory(haplotype):
     trajectory = [get_frequency(haplotype, gen) for gen in range(generations)]
     return trajectory
 
-
-# In[52]:
-
 def get_all_haplotypes():
-    haplotypes = set()   
+    haplotypes = set()
     for generation in history:
         for haplotype in generation:
             haplotypes.add(haplotype)
     return haplotypes
 
-
-# In[53]:
-
 colors = ["#781C86", "#571EA2", "#462EB9", "#3F47C9", "#3F63CF", "#447CCD", "#4C90C0", "#56A0AE", "#63AC9A", "#72B485", "#83BA70", "#96BD60", "#AABD52", "#BDBB48", "#CEB541", "#DCAB3C", "#E49938", "#E68133", "#E4632E", "#DF4327", "#DB2122"]
 
-
-# In[54]:
-
 colors_lighter = ["#A567AF", "#8F69C1", "#8474D1", "#7F85DB", "#7F97DF", "#82A8DD", "#88B5D5", "#8FC0C9", "#97C8BC", "#A1CDAD", "#ACD1A0", "#B9D395", "#C6D38C", "#D3D285", "#DECE81", "#E8C77D", "#EDBB7A", "#EEAB77", "#ED9773", "#EA816F", "#E76B6B"]
-
-
-# In[55]:
 
 def stacked_trajectory_plot(xlabel="generation"):
     mpl.rcParams['font.size']=18
@@ -422,8 +262,6 @@ def stacked_trajectory_plot(xlabel="generation"):
 
 # ### Plot SNP trajectories
 
-# In[56]:
-
 def get_snp_frequency(site, generation):
     minor_allele_frequency = 0.0
     pop_at_generation = history[generation]
@@ -434,9 +272,6 @@ def get_snp_frequency(site, generation):
             minor_allele_frequency += frequency
     return minor_allele_frequency
 
-
-# In[57]:
-
 def get_snp_trajectory(site):
     trajectory = [get_snp_frequency(site, gen) for gen in range(generations)]
     return trajectory
@@ -444,19 +279,14 @@ def get_snp_trajectory(site):
 
 # Find all variable sites.
 
-# In[58]:
-
 def get_all_snps():
-    snps = set()   
+    snps = set()
     for generation in history:
         for haplotype in generation:
             for site in range(seq_length):
                 if haplotype[site] != "A":
                     snps.add(site)
     return snps
-
-
-# In[59]:
 
 def snp_trajectory_plot(xlabel="generation"):
     mpl.rcParams['font.size']=18
@@ -465,9 +295,9 @@ def snp_trajectory_plot(xlabel="generation"):
     data = []
     for trajectory, color in itertools.izip(trajectories, itertools.cycle(colors)):
         data.append(range(generations))
-        data.append(trajectory)    
+        data.append(trajectory)
         data.append(color)
-    fig = plt.plot(*data)   
+    fig = plt.plot(*data)
     plt.ylim(0, 1)
     plt.ylabel("frequency")
     plt.xlabel(xlabel)
@@ -476,8 +306,6 @@ def snp_trajectory_plot(xlabel="generation"):
 # ## Scale up
 
 # Here, we scale up to more interesting parameter values.
-
-# In[60]:
 
 pop_size = 50
 seq_length = 100
@@ -489,19 +317,12 @@ fitness_chance = 0.1 # chance that a mutation has a fitness effect
 
 # In this case there are $\mu$ = 0.01 mutations entering the population every generation.
 
-# In[61]:
-
 seq_length * mutation_rate
 
 
 # And the population genetic parameter $\theta$, which equals $2N\mu$, is 1.
 
-# In[62]:
-
 2 * pop_size * seq_length * mutation_rate
-
-
-# In[63]:
 
 base_haplotype = ''.join(["A" for i in range(seq_length)])
 pop.clear()
@@ -511,12 +332,8 @@ pop[base_haplotype] = pop_size
 fitness[base_haplotype] = 1.0
 
 
-# In[64]:
-
 simulate()
 
-
-# In[65]:
 
 plt.figure(num=None, figsize=(14, 14), dpi=80, facecolor='w', edgecolor='k')
 plt.subplot2grid((3,2), (0,0), colspan=2)
@@ -527,24 +344,3 @@ plt.subplot2grid((3,2), (2,0))
 diversity_plot()
 plt.subplot2grid((3,2), (2,1))
 divergence_plot()
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
-
