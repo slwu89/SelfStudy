@@ -22,6 +22,8 @@ module MutationDriftSelection
 
 using Distributions
 
+export generate_haplotype
+
 alphabet = ['A','T']
 
 #Generate random haplotypes

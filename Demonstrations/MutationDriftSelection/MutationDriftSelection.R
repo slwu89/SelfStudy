@@ -33,4 +33,10 @@ jlParams = juliaEval("Dict(:popSize=>%s, :seqLen=>%s, :generations=>%s, :mutatio
 
 juliaGet(jlParams)
 
-juliaSource()
+jlMod = juliaSource("/Users/slwu89/Desktop/git/SelfStudy/Demonstrations/MutationDriftSelection/MutationDriftSelection.jl")
+
+juliaAddToPath("/Users/slwu89/Desktop/git/SelfStudy/Demonstrations/MutationDriftSelection/")
+juliaImport("MutationDriftSelection.jl")
+
+func = JuliaFunction("generate_haplotype", "MutationDriftSelection")
+
