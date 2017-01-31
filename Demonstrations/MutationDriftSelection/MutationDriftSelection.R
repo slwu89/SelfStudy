@@ -20,23 +20,23 @@ paramsList <- list(
   alleleFreq = c(0.5,0.5) #allele frequencies for two letter alphabet
 )
 
-# paramsVec = c(50,100,500,0.0001,1.1,0.1)
-
-# js = juliaSend(paramsList) #currently deprecated in Julia v0.5.0; wait for XRJulia update
-
-# jlParams = juliaEval("Dict(:popSize=>%s, :seqLen=>%s, :generations=>%s, :mutationRate=>%s, :fitnessEffect=>%s, :fitnessChance=>%s)",
-#                  paramsVec[1],paramsVec[2],paramsVec[3],paramsVec[4],paramsVec[5],paramsVec[6])
-
 jlParams = juliaEval("Dict(:popSize=>%s, :seqLen=>%s, :generations=>%s, :mutationRate=>%s, :fitnessEffect=>%s, :fitnessChance=>%s, :alleleFreq=>%s)",
                      paramsList[[1]],paramsList[[2]],paramsList[[3]],paramsList[[4]],paramsList[[5]],paramsList[[6]],paramsList[[7]])
 
 
 juliaGet(jlParams)
 
-jlMod = juliaSource("/Users/slwu89/Desktop/git/SelfStudy/Demonstrations/MutationDriftSelection/MutationDriftSelection.jl")
+generateHaplotype = juliaEval("
+          function generate_haplotype(pars)
+                               hap = wsample(['A','T'],pars[:alleleFreq])
+                               [hap = hap * wsample(['A','T'],pars[:alleleFreq]) for i in 2:pars[:seqLen]]
+                               return hap
+                               end
+                               ")
 
-juliaAddToPath("/Users/slwu89/Desktop/git/SelfStudy/Demonstrations/MutationDriftSelection/")
-juliaImport("MutationDriftSelection.jl")
 
-func = JuliaFunction("generate_haplotype", "MutationDriftSelection")
 
+# jlMod = juliaSource("/Users/slwu89/Desktop/git/SelfStudy/Demonstrations/MutationDriftSelection/MutationDriftSelection.jl")
+# 
+# juliaAddToPath("/Users/slwu89/Desktop/git/SelfStudy/Demonstrations/MutationDriftSelection/")
+# juliaImport("MutationDriftSelection.jl")
