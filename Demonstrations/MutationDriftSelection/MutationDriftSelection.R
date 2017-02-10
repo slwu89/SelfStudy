@@ -26,10 +26,10 @@ jlParams = juliaEval("Dict(:popSize=>%s, :seqLen=>%s, :generations=>%s, :mutatio
 
 juliaGet(jlParams)
 
-generateHaplotype = juliaEval("
-          function generate_haplotype(pars)
-                               hap = wsample(['A','T'],pars[:alleleFreq])
-                               [hap = hap * wsample(['A','T'],pars[:alleleFreq]) for i in 2:pars[:seqLen]]
+generateHaplotype = JuliaFunction("
+          function generate_haplotype()
+                               hap = wsample(['A','T'],[0.5,0.5])
+                               [hap = hap * wsample(['A','T'],[0.5,0.5]) for i in 2:pars[:seqLen]]
                                return hap
                                end
                                ")

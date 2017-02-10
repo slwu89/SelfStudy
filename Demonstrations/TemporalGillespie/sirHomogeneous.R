@@ -142,11 +142,11 @@ sir_homogeneous <- cmpfun(sir_homogeneous)
 
 #generate the network medium the simulation will be run on
 library(igraph)
-n_nodes <- 200
+n_nodes <- 100
 erdos <- erdos.renyi.game(n=n_nodes,p=0.025,directed=FALSE,loops=FALSE)
 erdos_edge <- as_edgelist(erdos)
 erdos_edge <- erdos_edge[order(erdos_edge[,1]),]
-beta <- 3*(0.15) # effective contact rate X transmission probability
+beta <- 3*(0.20) # effective contact rate X transmission probability
 mu <- 1/5 # 1 / infectious duration
 # set.seed(1)
 sir_out <- sir_homogeneous(n_nodes=n_nodes,edge=erdos_edge,root=5,beta=beta,mu=mu,
@@ -177,6 +177,40 @@ sir_out_detail_time <- sapply(sir_out$detail_out,function(x){x$time})
 
 par(mfrow=c(1,2))
 matplot(sir_out_dat,type="l",ylab="",main="Gillespie SSA on Static Network")
+grid()
 matplot(sir_out_detail_time[order(sir_out_detail_time)],sir_out_detail[order(sir_out_detail_time),],
         type="l",xlab="",ylab="",main="Gillespie SSA on Static Network (Detailed Output)")
+grid()
 par(mfrow=c(1,1))
+
+# #make an animation
+# library(ndtv)
+# library(viridis)
+# 
+# netAdj <- as.matrix(as_adjacency_matrix(erdos,type="both"))
+# netList <- vector(mode="list",length=length(sir_out_detail_time))
+# for(i in 1:length(netList)){
+#   netList[[i]] <- as.network.matrix(x = netAdj,matrix.type = "adjacency",directed = FALSE)
+#   network::set.vertex.attribute(netList[[i]],attrname="SIR",value = sir_out$detail_out[[i]]$x)
+# }
+# 
+# 
+# # convert list of networks to networkDynamic
+# sirDynamic <- networkDynamic(network.list=netList[1:15])
+# 
+# netColSet = viridis(3)
+# netCols <- function(charIn){
+#   unname(sapply(charIn,function(x){
+#     if(x=="s"){
+#       netColSet[3]
+#     } else if(x=="i"){
+#       netColSet[2]
+#     } else {
+#       netColSet[1]
+#     }
+#   }))
+# }
+# 
+# sirDynamicAni <- compute.animation(net = sirDynamic,verbose=TRUE)
+# 
+# render.d3movie(sirDynamicAni,vertex.col="SIR",edge.col="grey30",displaylabels=FALSE,verbose=TRUE,output.mode="htmlWidget")
