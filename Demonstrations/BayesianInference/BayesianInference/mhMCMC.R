@@ -31,6 +31,9 @@ perspCol <- function(x,y,z,color,...,xlg=TRUE,ylg=TRUE)
   )
 }
 
+
+#maybe have something that reacts to ix push x1, x2, zz to global then have plotsurface only respond to theta and phi
+
 #plotSurface: plot function surface
 plotSurface <- function(ix,theta,phi){
   
@@ -49,7 +52,34 @@ plotSurface <- function(ix,theta,phi){
     zz <- matrix(apply(expand.grid(x1, x2), 1, func), nrow=length(x1))
   }
   
-  persp.withcol(x = x1,y = x2,z = zz,color = viridis(60),theta=theta,phi=phi,border=NA,xlab="x",ylab="y",zlab="f(x)")
+  perspCol(x = x1,y = x2,z = zz,color = viridis(60),theta=theta,phi=phi,border=NA,xlab="x",ylab="y",zlab="f(x)")
+}
+
+#plotMCMC: plot 2D surface and trace
+#ix: optimization function
+#seed: seed for MCMC
+#x1: initial location of chain
+#x2: initial location of chain
+#adapt: adaptive or random walk 
+#iter: number of iterations for MCMC 
+#adapt_size_start: for adaptive chain 
+#acceptance_rate_weight: for adaptive chain
+#acceptance_window: for adaptive chain
+#adapt_shape_start: for adaptive chain
+runMCMC <- function(ix,seed,x1,x2,adapt,iter,adapt_size_start,acceptance_rate_weight,acceptance_window,adapt_shape_start){
+ 
+  target = switch(ix,
+    "1" = rosenbrock,
+    "2" = goldpr
+  )
+  
+  if(adapt){
+    mcmcOut = adaptMCMC(target = target,init_theta = c(x1,x2),covmat =diag(c(1,1)),n_iterations = iter,adapt_size_start = adapt_size_start,acceptance_rate_weight = acceptance_rate_weight,acceptance_window = acceptance_window,adapt_shape_start = adapt_shape_start,seedMH = seed)
+  } else {
+    mcmcOut = rwMCMC(target = target,init_theta = c(x1,x2),covmat =diag(c(1,1)),n_iterations = iter,seedMH = seed)
+  }
+  
+  return(mcmcOut)
 }
 
 

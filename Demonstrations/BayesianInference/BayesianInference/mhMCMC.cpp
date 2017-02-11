@@ -73,7 +73,7 @@ double mvrnorm_pdf(arma::vec x, arma::vec mu, arma::mat sigma){
 */
 // [[Rcpp::export]]
 List adaptMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_iterations, int adapt_size_start, double acceptance_rate_weight, int acceptance_window, int adapt_shape_start, 
-               int info, double seedMH, double adapt_size_cooling = 0.99, double max_scaling_sd = 50.0){
+                double seedMH, double adapt_size_cooling = 0.99, double max_scaling_sd = 50.0){
   
   std::mt19937 engine(seedMH); //set seed of uniform RNG
   std::uniform_real_distribution<> uniform(0.0,1.0);
@@ -138,12 +138,12 @@ List adaptMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_it
       covmat_proposal = pow(scaling_sd,2) * covmat_empirical;
     }
     
-    //print chain diagnostics
-    if(i % info == 0){
-      // Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
-      Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << ", scaling_sd: " << scaling_sd << ", scaling_multiplier: " << scaling_multiplier << std::endl;
-      
-    }
+    // //print chain diagnostics
+    // if(i % info == 0){
+    //   // Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
+    //   Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << ", scaling_sd: " << scaling_sd << ", scaling_multiplier: " << scaling_multiplier << std::endl;
+    //   
+    // }
     
     //propose new theta
     arma::rowvec Y(covmat_proposal.n_cols);
@@ -227,7 +227,7 @@ List adaptMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_it
 * n_iterations is the number of iterations
 */
 // [[Rcpp::export]]
-List rwMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_iterations, int info, double seedMH){
+List rwMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_iterations, double seedMH){
   
   std::mt19937 engine(seedMH); //set seed of uniform RNG
   std::uniform_real_distribution<> uniform(0.0,1.0);
@@ -257,12 +257,12 @@ List rwMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_itera
       return(List::create(Named("null")=R_NilValue));
     }
     
-    //print chain diagnostics
-    if(i % info == 0){
-      // Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
-      Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
-      
-    }
+    // //print chain diagnostics
+    // if(i % info == 0){
+    //   // Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
+    //   Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
+    //   
+    // }
     
     //propose new theta
     arma::rowvec Y(covmat_proposal.n_cols);
