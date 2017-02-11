@@ -24,6 +24,8 @@ library(viridis)
 
 #compile Metropolis-Hastings MCMC code
 Rcpp::sourceCpp("mhMCMC.cpp")
+
+#source R functions
 source("mhMCMC.R")
 
 
@@ -40,17 +42,20 @@ shinyServer(function(input, output) {
   
   valuesMH <- reactiveValues() 
   
+  #theta and phi adjust the angle of view for persp plots
   observe({
-    
-    valuesMH$mhFunction <- input$mhFunction
     valuesMH$theta <- input$mhTheta
     valuesMH$phi <- input$mhPhi
-    
+  })
+  
+  #only evaluate function surface when user changes input function for test optimization
+  observe({
+    valuesMH$funcSurface <- calcSurface(input$mhFunction)
   })
   
   #plot function surface
   output$mhFunction <- renderPlot({
-    plotSurface(ix = valuesMH$mhFunction,theta = valuesMH$theta,phi = valuesMH$phi)
+    plotSurface(dat = valuesMH$funcSurface,theta = valuesMH$theta,phi = valuesMH$phi)
   },width = 600,height = 600)
   
 })

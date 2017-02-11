@@ -67,8 +67,7 @@ persp.withcol(x = x1,y = x2,z = exp(d.banana),color = viridis(60),theta=120,phi=
 
 #plot output from complex sampler
 banana1 <- adaptMCMC(target=p.log,init_theta=c(10,10),covmat=diag(c(1,1)),n_iterations=1e3,
-                     adapt_size_start=10,acceptance_rate_weight=0,acceptance_window=0,adapt_shape_start=20,
-                     info=1e2,seedMH = 50)
+                     adapt_size_start=10,acceptance_rate_weight=0,acceptance_window=0,adapt_shape_start=20,seedMH = 50)
 
 par(mfrow=c(1,2))
 

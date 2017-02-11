@@ -1,4 +1,4 @@
-## Metropolis-Hastings MCMC
+### Metropolis-Hastings MCMC
 
 it does stuff.
 

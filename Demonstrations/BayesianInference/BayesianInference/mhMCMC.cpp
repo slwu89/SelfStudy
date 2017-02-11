@@ -261,7 +261,6 @@ List rwMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_itera
     // if(i % info == 0){
     //   // Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
     //   Rcout << "At iter: " << i << ", acceptance rate is: " << acceptance_rate << std::endl;
-    //   
     // }
     
     //propose new theta
