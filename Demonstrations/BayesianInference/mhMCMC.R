@@ -74,7 +74,7 @@ par(mfrow=c(1,2))
 
 image(x1, x2, exp(d.banana), col= funcCol,xlab=expression(theta[1]),ylab=expression(theta[2])) #image of function
 contour(x1, x2, exp(d.banana), add=TRUE, col=gray(0.5)) #contours of function density
-traceCol = viridis(n = nrow(banana1$theta_trace),option = "D",begin = 0.5) #colors of MCMC trace
+traceCol = viridis(n = nrow(banana1$theta_trace),option = "A",begin = 0.5) #colors of MCMC trace
 for(i in 1:(nrow(banana1$theta_trace)-1)){ #plot MCMC trace
   lines(banana1$theta_trace[i:(i+1),],col=traceCol[i],type="l")
 }

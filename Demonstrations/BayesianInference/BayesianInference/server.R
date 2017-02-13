@@ -58,4 +58,20 @@ shinyServer(function(input, output) {
     plotSurface(dat = valuesMH$funcSurface,theta = valuesMH$theta,phi = valuesMH$phi)
   },width = 600,height = 600)
   
+  #run MCMC
+  observeEvent(input$mhRun,{
+    #run MCMC
+    valuesMH$mcmc <- runMCMC(ix = input$mhFunction,seed = input$mhSeed,x1 = input$mhX1,x2 = input$mhX2,mcmcType = input$mhMCMC,diag = input$mhDiag,
+                    iter = input$mhIter,adapt_size_start = input$mhAdaptSizeStart,acceptance_rate_weight = input$mhAcceptanceRateWeight,acceptance_window = input$mhAcceptanceWindow,adapt_shape_start = input$mhAdaptShapeStart)
+    #2d plots
+    output$mhMCMC2d <- renderPlot({
+      plotMCMC(funcDat = valuesMH$funcSurface,mcmcDat = valuesMH$mcmc)
+    },width = 1000,height = 600)
+    
+    #plot MCMC perspective
+    output$mhMCMC3d <- renderPlot({
+      plotMCMCpersp(funcDat = valuesMH$funcSurface,mcmcDat = valuesMH$mcmc,theta = valuesMH$theta,phi = valuesMH$phi)
+    },width = 800,height = 800)
+  })
+  
 })

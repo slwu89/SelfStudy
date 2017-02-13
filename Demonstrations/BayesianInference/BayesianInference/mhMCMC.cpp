@@ -116,7 +116,7 @@ List adaptMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_it
     //adaptive routine
     if(adapt_size_start != 0 && i >= adapt_size_start && (adapt_shape_start == 0 || acceptance_rate*i < adapt_shape_start)){
       if(!adapting_size){
-        Rcout << "Begin adapting size of sigma at iter: " << i << std::endl;
+        // Rcout << "Begin adapting size of sigma at iter: " << i << std::endl;
         adapting_size = true;
       }
       //adapt size of sigma until we get enough accepted jumps
@@ -130,7 +130,7 @@ List adaptMCMC(Function target, arma::vec init_theta, arma::mat covmat, int n_it
       }
     } else if(adapt_shape_start != 0 && acceptance_rate*i >= adapt_shape_start){
       if(!adapting_shape){
-        Rcout << "Begin adapting shape of sigma at iter: " << i << std::endl;
+        // Rcout << "Begin adapting shape of sigma at iter: " << i << std::endl;
         adapting_shape = true;
       }
       //adapt shape of sigma using optimal scaling  factor for multivariate target distributions

@@ -12,6 +12,12 @@
 # MCMC & Associated Functions
 #########################################
 
+#helper function to sample equally from color space
+colGG <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
 #perspCol: plot persp with color according to z-axis 
 perspCol <- function(x,y,z,color,...,xlg=TRUE,ylg=TRUE)
 {
@@ -40,11 +46,11 @@ calcSurface <- function(ix){
   
   #set up lattice 
   if(ix==1){
-    x1 <- seq(-15, 15, length=200)
-    x2 <- seq(-15, 15, length=200)
-    func <- rosenbrock
+    x1 <- seq(-3, 3, length=200)
+    x2 <- seq(-2, 2, length=200)
+    func <- camel6
     zz <- matrix(apply(expand.grid(x1, x2), 1, func), nrow=length(x1))
-    zz <- exp(zz)
+    # zz <- exp(zz)
   }
   if(ix==2){
     x1 <- seq(-2, 2, length=200)
@@ -68,25 +74,26 @@ calcSurface <- function(ix){
   return(list(x1=x1,x2=x2,zz=zz,func=func)) 
 }
 
-plotSurface <- function(dat,theta,phi,r){
+plotSurface <- function(dat,theta,phi){
   with(dat,{
-    perspCol(x = x1,y = x2,z = zz,color = viridis(60),theta=theta,phi=phi,border=NA,xlab="x",ylab="y",zlab="f(x)",ticktype="detailed")
+    perspCol(x = x1,y = x2,z = zz,color = viridis(60),theta=theta,phi=phi,border=NA,xlab="x1",ylab="x2",zlab="f(x)",ticktype="detailed")
   })
 }
 
 
-#plotMCMC: plot 2D surface and trace
+#runMCMC: run MCMC algorithm
 #ix: optimization function
 #seed: seed for MCMC
 #x1: initial location of chain
 #x2: initial location of chain
-#adapt: adaptive or random walk 
+#mcmcType: adaptive or random walk 
+#diag: diagonal values on covariance matrix
 #iter: number of iterations for MCMC 
 #adapt_size_start: for adaptive chain 
 #acceptance_rate_weight: for adaptive chain
 #acceptance_window: for adaptive chain
 #adapt_shape_start: for adaptive chain
-runMCMC <- function(ix,seed,x1,x2,adapt,iter,adapt_size_start,acceptance_rate_weight,acceptance_window,adapt_shape_start){
+runMCMC <- function(ix,seed,x1,x2,mcmcType,diag,iter,adapt_size_start,acceptance_rate_weight,acceptance_window,adapt_shape_start){
  
   target = switch(ix,
     "1" = rosenbrock,
@@ -95,13 +102,46 @@ runMCMC <- function(ix,seed,x1,x2,adapt,iter,adapt_size_start,acceptance_rate_we
     "4" = levy13
   )
   
-  if(adapt){
-    mcmcOut = adaptMCMC(target = target,init_theta = c(x1,x2),covmat = diag(c(1,1)),n_iterations = iter,adapt_size_start = adapt_size_start,acceptance_rate_weight = acceptance_rate_weight,acceptance_window = acceptance_window,adapt_shape_start = adapt_shape_start,seedMH = seed)
-  } else {
-    mcmcOut = rwMCMC(target = target,init_theta = c(x1,x2),covmat = diag(c(1,1)),n_iterations = iter,seedMH = seed)
-  }
+  mcmcOut = switch(mcmcType,
+    "1" = rwMCMC(target = target,init_theta = c(x1,x2),covmat = diag(rep(diag,2)),n_iterations = iter,seedMH = seed),
+    "2" = adaptMCMC(target = target,init_theta = c(x1,x2),covmat = diag(rep(diag,2)),n_iterations = iter,adapt_size_start = adapt_size_start,acceptance_rate_weight = acceptance_rate_weight,acceptance_window = acceptance_window,adapt_shape_start = adapt_shape_start,seedMH = seed)
+  )
   
   return(mcmcOut)
+}
+
+#plotMCMC: plot 2d surface and trace
+plotMCMC <- function(funcDat,mcmcDat){
+  
+  par(mfrow=c(1,2))
+  
+  with(funcDat,{
+    image(x1, x2, zz, col= colorRampPalette(colors=c("#132B43","#56B1F7"))(100),xlab=expression(theta[1]),ylab=expression(theta[2])) #image of function
+    contour(x1, x2, zz, add=TRUE, col=gray(0.5)) #contours of function density
+    traceCol = viridis(n = nrow(mcmcDat$theta_trace),option = "D",begin = 0.5) #colors of MCMC trace
+    for(i in 1:(nrow(mcmcDat$theta_trace)-1)){ #plot MCMC trace
+      lines(mcmcDat$theta_trace[i:(i+1),],col=traceCol[i],type="l")
+    }
+    
+    matplot(mcmcDat$theta_trace,type="l",col=colGG(2),lty=1,lwd=1.25,xlab="Iterations",ylab="Parameter Trace") #trace of parameters
+    grid()
+    
+  })  
+
+  par(mfrow=c(1,1))
+}
+
+#plotMCMCpersp
+plotMCMCpersp <- function(funcDat,mcmcDat,theta,phi){
+  traceCol = viridis(n = nrow(mcmcDat$theta_trace),option = "A",begin = 0.5) #colors of MCMC trace
+  with(funcDat,{
+    xx = perspCol(x = x1,y = x2,z = zz,color = viridis(60),theta=theta,phi=phi,border=NA,xlab="x1",ylab="x2",zlab="f(x)",ticktype="detailed")
+    x = trans3d(x = mcmcDat$theta_trace[,1],y = mcmcDat$theta_trace[,2],z = apply(X = mcmcDat$theta_trace,MARGIN = 1,FUN = func),pmat = xx)
+    for(i in 1:(nrow(mcmcDat$theta_trace)-1)){ #plot MCMC trace
+      lines(x$x[i:(i+1)],x$y[i:(i+1)],col=traceCol[i],type="l")
+    }
+    points(x,pch=16,col=traceCol,cex=0.5) #points of MCMC trace
+  })
 }
 
 
@@ -111,9 +151,35 @@ runMCMC <- function(ix,seed,x1,x2,adapt,iter,adapt_size_start,acceptance_rate_we
 
 #Rosenbrock (banana) Function
 #B: controls 'bananacity'
-rosenbrock <- function(x,B=0.03) {
-  -x[1]^2/200 - 1/2*(x[2]+B*x[1]^2-100*B)^2
+# rosenbrock <- function(x,B=0.03) {
+#   -x[1]^2/200 - 1/2*(x[2]+B*x[1]^2-100*B)^2
+# }
+
+# rosenbrock <- function(xx){
+#   d <- length(xx)
+#   xi <- xx[1:(d-1)]
+#   xnext <- xx[2:d]
+#   
+#   sum <- sum(100*(xnext-xi^2)^2 + (xi-1)^2)
+#   
+#   y <- sum
+#   return(-y)
+# }
+
+camel6 <- function(xx){
+  
+  x1 <- xx[1]
+  x2 <- xx[2]
+  
+  term1 <- (4-2.1*x1^2+(x1^4)/3) * x1^2
+  term2 <- x1*x2
+  term3 <- (-4+4*x2^2) * x2^2
+  
+  y <- term1 + term2 + term3
+  return(-y)
 }
+
+
 
 
 #Goldenstein-Price Function
