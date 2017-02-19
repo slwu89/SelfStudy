@@ -146,7 +146,7 @@ n_nodes <- 100
 erdos <- erdos.renyi.game(n=n_nodes,p=0.025,directed=FALSE,loops=FALSE)
 erdos_edge <- as_edgelist(erdos)
 erdos_edge <- erdos_edge[order(erdos_edge[,1]),]
-beta <- 3*(0.20) # effective contact rate X transmission probability
+beta <- 3/5 # effective contact rate X transmission probability
 mu <- 1/5 # 1 / infectious duration
 # set.seed(1)
 sir_out <- sir_homogeneous(n_nodes=n_nodes,edge=erdos_edge,root=5,beta=beta,mu=mu,
