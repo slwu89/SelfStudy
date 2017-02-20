@@ -31,7 +31,9 @@ genPop <- function(n, mean = 10, sd = 2){
 
 # targeted treatment
 treatTarget <- function(pop, threshold = 12, treat = 2){
-  ifelse(pop > threshold, pop - treat, pop)
+  ix <- which(pop>threshold)
+  pop[ix] <- pop[ix] - treat
+  return(pop)
 }
 
 # population-wide treatment
@@ -39,55 +41,27 @@ treatPop <- function(pop, treat = 0.5){
   pop - treat
 }
 
+#perspCol: plot persp with color according to z-axis
+perspCol <- function(x,y,z,color,...,xlg=TRUE,ylg=TRUE){
+  colnames(z) <- y
+  rownames(z) <- x
 
-# replication of results
-plotCol <- viridis(n = 3)
-benefit <- 30000
-targetCostTreat <- 1000
-#pretreatment population
-basePop <- genPop(n=1e4) #generate population
+  nrz <- nrow(z)
+  ncz <- ncol(z)
 
-baseRisk <- logRisk(basePop) #multiply risk curve by pretreatment population
+  nb.col = length(color)
 
-ixBase <- order(basePop) #integrating the distribution calculates the expected amount of disease
-baseSpline <- splinefun(x = basePop[ixBase],y = baseRisk[ixBase],method = "natural")
-baseDisease <- integrate(baseSpline,lower=min(basePop),upper=max(basePop))
-
-plot(basePop[ixBase],baseRisk[ixBase],type="l",col=plotCol[1]) #plot the risk curve
-grid()
-
-#targeted treatment population
-numTarget <- sum(ifelse(basePop > 12, T, F))
-targetPop <- treatTarget(pop = basePop,threshold = 12,treat = 2) #apply targeted treatment
-
-targetRisk <- logRisk(targetPop) #multiply risk curve by targeted treatment population
-
-ixTarget <- order(targetPop) #integrating the distribution calculates the expected amount of disease, given targeted treatment
-targetSpline <- splinefun(x = targetPop[ixTarget],y = targetRisk[ixTarget],method = "natural")
-targetDisease <- integrate(targetSpline,lower=min(targetPop),upper=max(targetPop))
-
-plot(targetPop[ixTarget],targetRisk[ixTarget],type="l",col=plotCol[2]) #plot the risk curve
-grid()
-
-#benefit (benefit of case avoided X how many cases were avoided)
-targetBenefit <- benefit * (baseDisease$value - targetDisease$value)
-
-#cost (number treated X cost of treatment for each)
-targetCost <- numTarget * targetCostTreat
-
-targetBenefit/targetCost
-
-#population-wide treatment
-popPop <- treatPop(pop = basePop) #apply population-wide treatment
-
-popRisk <- logRisk(popPop) #multiply risk curve by population-wide treatment population
-
-ixPop <- order(popPop) #integrating the distribution calculates the expected amount of disease, given targeted treatment
-popSpline <- splinefun(x = popPop[ixPop],y = popRisk[ixPop],method = "natural")
-integrate(popSpline,lower=min(popPop),upper=max(popPop))
-
-plot(popPop[ixPop],popRisk[ixPop],type="l",col=plotCol[3]) #plot the risk curve
-grid()
+  zfacet <- z[-1, -1] + z[-1, -ncz] + z[-nrz, -1] + z[-nrz, -ncz]
+  facetcol <- cut(zfacet, nb.col)
+  par(xlog=xlg,ylog=ylg)
+  persp(
+    as.numeric(rownames(z)),
+    as.numeric(colnames(z)),
+    as.matrix(z),
+    col=color[facetcol],
+    ...
+  )
+}
 
 
 
@@ -127,6 +101,34 @@ runSim <- function(n,b0=4,b1=0.3,mean=10,sd=2,threshold=12,treatT=2,treatP=0.5,.
                              spline=popSpline,disease=popDisease) #push to output
 
   return(simOut)
+}
+
+runSimPretreat <- function(n,b0=4,b1=0.3,mean=10,sd=2,...){
+
+  #pretreatment population
+  basePop <- genPop(n=n) #generate population
+  baseRisk <- logRisk(x = basePop,b0 = b0,b1 = b1) #multiply risk curve by pretreatment population
+  ixBase <- order(basePop) #integrating the distribution calculates the expected amount of disease
+  baseSpline <- splinefun(x = basePop[ixBase],y = baseRisk[ixBase],method = "natural")
+  baseDisease <- integrate(baseSpline,lower=min(basePop),upper=max(basePop),...)
+
+  return(list(pop=basePop,risk=baseRisk,ix=ixBase,
+                          spline=baseSpline,disease=baseDisease))
+
+}
+
+runSimTargeted <- function(pretreat,b0=4,b1=0.3,thresh=12,treat=2,...){
+
+  #targeted treatment
+  targetPop <- treatTarget(pop = pretreat$pop,threshold = thresh,treat = treat) #apply targeted treatment
+  targetRisk <- logRisk(targetPop) #multiply risk curve by targeted treatment population
+  ixTarget <- order(targetPop) #integrating the distribution calculates the expected amount of disease, given targeted treatment
+  targetSpline <- splinefun(x = targetPop[ixTarget],y = targetRisk[ixTarget],method = "natural")
+  targetDisease <- integrate(targetSpline,lower=min(targetPop),upper=max(targetPop),...)
+
+  return(list(pop=targetPop,risk=targetRisk,ix=ixTarget,
+                             spline=targetSpline,disease=targetDisease))
+
 }
 
 #costBenefitSim: run cost benefit analysis with specified parameters
@@ -182,9 +184,9 @@ runSim <- function(n,b0=4,b1=0.3,mean=10,sd=2,threshold=12,treatT=2,treatP=0.5,.
 
 #given a baseline population calc the benefit/cost ratio
 #basePop is "preTreat" element from simOut
-calcTargetRatio <- function(threshold,targetCostTreat,basePop,benefit){
+calcTargetRatio <- function(threshold,cost,basePop,benefit){
 
-  numTarget <- sum(ifelse(basePop$pop > threshold,T,F)) #how many patients must be treated
+  numTarget <- sum(basePop$pop > threshold) #how many patients must be treated
   targetPop <- treatTarget(pop = basePop$pop,threshold = threshold,treat = 2) #apply targeted treatment
   targetRisk <- logRisk(targetPop) #multiply risk curve by targeted treatment population
   ixTarget <- order(targetPop) #integrating the distribution calculates the expected amount of disease, given targeted treatment
@@ -195,41 +197,21 @@ calcTargetRatio <- function(threshold,targetCostTreat,basePop,benefit){
   targetBenefit <- benefit * (basePop$disease$value - targetDisease$value)
 
   #cost (number treated X cost of treatment for each)
-  targetCost <- numTarget * targetCostTreat
+  targetCost <- numTarget * cost
 
   return(targetBenefit/targetCost)
 }
 
-calcTargetRatio <- Vectorize(calcTargetRatio,vectorize.args = c("threshold","targetCostTreat"))
+calcTargetRatio <- Vectorize(calcTargetRatio,vectorize.args = c("threshold","cost"))
 
 thresholdVector <- seq(from=8,to=16,by=0.05)
-costVector <- seq(from=600,to=1400,by=10)
+costVector <- seq(from=600,to=1400,by=5)
 
 targetSurface <- outer(X = thresholdVector,Y = costVector,FUN = calcTargetRatio, basePop=basePop, benefit=30000)
 
-perspCol(x = thresholdVector,y = costVector,z = targetSurface,color = viridis(60),theta=330,phi=30,border=NA,xlab="x1",ylab="x2",zlab="f(x)",ticktype="detailed")
 
-#perspCol: plot persp with color according to z-axis
-perspCol <- function(x,y,z,color,...,xlg=TRUE,ylg=TRUE){
-  colnames(z) <- y
-  rownames(z) <- x
-
-  nrz <- nrow(z)
-  ncz <- ncol(z)
-
-  nb.col = length(color)
-
-  zfacet <- z[-1, -1] + z[-1, -ncz] + z[-nrz, -1] + z[-nrz, -ncz]
-  facetcol <- cut(zfacet, nb.col)
-  par(xlog=xlg,ylog=ylg)
-  persp(
-    as.numeric(rownames(z)),
-    as.numeric(colnames(z)),
-    as.matrix(z),
-    col=color[facetcol],
-    ...
-  )
-}
+perspCol(y = thresholdVector,x = costVector,z = targetSurface,color = viridis(60),theta=330,phi=30,border=NA,xlab="x1",ylab="x2",zlab="f(x)",ticktype="detailed")
+# t(apply(targetSurface, 2, rev))
 
 
 
@@ -252,7 +234,7 @@ plotSim2d <- function(simOut){
   #plot pretreatment
   plot(simOut$preTreat$pop[simOut$preTreat$ix],simOut$preTreat$risk[simOut$preTreat$ix],
        type="l",col = "black",lwd = 1.75,xlab = paste0("Simulated Risk Factor \n Expected Disease: ",signif(simOut$preTreat$disease$value),6),
-       ylab = "Risk Curve", main = "No Treatment",ylim=c(0,1)) #plot the risk curve
+       ylab = "Risk Curve", main = "No Treatment",ylim=c(0,1),xlim=xlim) #plot the risk curve
   baseDensity <- density(simOut$preTreat$pop) #density of pretreatment population risk factor
   polygon(baseDensity$x,baseDensity$y,col=plotCol[1])
   grid()
@@ -260,7 +242,7 @@ plotSim2d <- function(simOut){
   #plot targeted treatment
   plot(simOut$targetTreat$pop[simOut$targetTreat$ix],simOut$targetTreat$risk[simOut$targetTreat$ix],
        type="l",col = "black",lwd = 1.75,xlab = paste0("Simulated Risk Factor \n Expected Disease: ",signif(simOut$targetTreat$disease$value),6),
-       ylab = "Risk Curve",main = "Targeted Treatment",ylim = c(0,1)) #plot the risk curve
+       ylab = "Risk Curve",main = "Targeted Treatment",ylim = c(0,1),xlim=xlim) #plot the risk curve
   targetDensity <- density(simOut$targetTreat$pop)
   polygon(targetDensity$x,targetDensity$y,col=plotCol[2])
   grid()
@@ -268,7 +250,7 @@ plotSim2d <- function(simOut){
   #plot population-wide treatment
   plot(simOut$popTreat$pop[simOut$popTreat$ix],simOut$popTreat$risk[simOut$popTreat$ix],
        type="l",col = "black",lwd = 1.75,xlab = paste0("Simulated Risk Factor \n Expected Disease: ",signif(simOut$popTreat$disease$value),6),
-       ylab = "Risk Curve", main = "Population-wide Treatment",ylim=c(0,1)) #plot the risk curve
+       ylab = "Risk Curve", main = "Population-wide Treatment",ylim=c(0,1),xlim=xlim) #plot the risk curve
   popDensity <- density(simOut$popTreat$pop)
   polygon(popDensity$x,popDensity$y,col=plotCol[3])
   grid()
@@ -302,3 +284,57 @@ plotSim2d <- function(simOut){
   par(mfrow=c(1,1))
 
 }
+
+
+
+
+
+
+# # replication of results
+# plotCol <- viridis(n = 3)
+# benefit <- 30000
+# targetCostTreat <- 1000
+# #pretreatment population
+# basePop <- genPop(n=1e4) #generate population
+#
+# baseRisk <- logRisk(basePop) #multiply risk curve by pretreatment population
+#
+# ixBase <- order(basePop) #integrating the distribution calculates the expected amount of disease
+# baseSpline <- splinefun(x = basePop[ixBase],y = baseRisk[ixBase],method = "natural")
+# baseDisease <- integrate(baseSpline,lower=min(basePop),upper=max(basePop))
+#
+# plot(basePop[ixBase],baseRisk[ixBase],type="l",col=plotCol[1]) #plot the risk curve
+# grid()
+#
+# #targeted treatment population
+# numTarget <- sum(ifelse(basePop > 12, T, F))
+# targetPop <- treatTarget(pop = basePop,threshold = 12,treat = 2) #apply targeted treatment
+#
+# targetRisk <- logRisk(targetPop) #multiply risk curve by targeted treatment population
+#
+# ixTarget <- order(targetPop) #integrating the distribution calculates the expected amount of disease, given targeted treatment
+# targetSpline <- splinefun(x = targetPop[ixTarget],y = targetRisk[ixTarget],method = "natural")
+# targetDisease <- integrate(targetSpline,lower=min(targetPop),upper=max(targetPop))
+#
+# plot(targetPop[ixTarget],targetRisk[ixTarget],type="l",col=plotCol[2]) #plot the risk curve
+# grid()
+#
+# #benefit (benefit of case avoided X how many cases were avoided)
+# targetBenefit <- benefit * (baseDisease$value - targetDisease$value)
+#
+# #cost (number treated X cost of treatment for each)
+# targetCost <- numTarget * targetCostTreat
+#
+# targetBenefit/targetCost
+#
+# #population-wide treatment
+# popPop <- treatPop(pop = basePop) #apply population-wide treatment
+#
+# popRisk <- logRisk(popPop) #multiply risk curve by population-wide treatment population
+#
+# ixPop <- order(popPop) #integrating the distribution calculates the expected amount of disease, given targeted treatment
+# popSpline <- splinefun(x = popPop[ixPop],y = popRisk[ixPop],method = "natural")
+# integrate(popSpline,lower=min(popPop),upper=max(popPop))
+#
+# plot(popPop[ixPop],popRisk[ixPop],type="l",col=plotCol[3]) #plot the risk curve
+# grid()
